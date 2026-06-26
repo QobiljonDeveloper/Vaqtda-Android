@@ -1,167 +1,214 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { useCallback, useMemo, useState } from "react";
+import { Alert, FlatList, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { Avatar, Badge, Button, Chip, EmptyState, SkeletonCard, Text } from "@/components/ui";
+import type { BadgeTone } from "@/components/ui";
 import { Colors } from "@/constants/colors";
+import { radius, shadow, spacing } from "@/constants/theme";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { supabase } from "@/lib/supabase";
+import { useBookings, type Booking } from "@/hooks/useBookings";
+import { formatDateFull } from "@/lib/format";
 import { localize } from "@/lib/localize";
 
-interface BookingRow {
-  id: string;
-  provider_id: string;
-  booking_date: string;
-  start_time: string;
-  end_time: string;
-  status: string;
-  business_name?: any;
-  [k: string]: any;
+type Filter = "all" | "upcoming" | "completed" | "cancelled";
+
+const UPCOMING = new Set(["upcoming", "pending", "confirmed"]);
+
+function statusMeta(status: string): { tone: BadgeTone; key: any } {
+  if (UPCOMING.has(status)) return { tone: "primary", key: "status.upcoming" };
+  if (status === "completed") return { tone: "success", key: "status.completed" };
+  return { tone: "danger", key: "status.cancelled" };
 }
 
-const STATUS_COLOR: Record<string, string> = {
-  upcoming: Colors.primaryDark,
-  completed: Colors.textMuted,
-  cancelled: Colors.danger,
-};
+/** Boshlanishiga 24 soatdan ko'p bo'lsa bekor qilsa bo'ladi (Toshkent UTC+5). */
+function canCancel(date: string, start: string): boolean {
+  const [y, mo, d] = date.split("-").map(Number);
+  const [h, mi] = start.split(":").map(Number);
+  const startUtc = Date.UTC(y, mo - 1, d, h, mi) - 5 * 3600000;
+  return startUtc - Date.now() >= 24 * 3600000;
+}
 
 export default function BookingsScreen() {
-  const { t } = useLanguage();
-  const { user, isAuthenticated } = useAuth();
+  const { t, lang } = useLanguage();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
-  const [bookings, setBookings] = useState<BookingRow[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchBookings = useCallback(async () => {
-    if (!user?.id) {
-      setBookings([]);
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    const { data } = await supabase
-      .from("user_bookings_view")
-      .select("*")
-      .eq("client_id", user.id)
-      .order("booking_date", { ascending: false })
-      .order("start_time", { ascending: false });
-    setBookings((data as BookingRow[]) ?? []);
-    setLoading(false);
-  }, [user?.id]);
+  const { bookings, loading, cancel, refetch } = useBookings();
+  const [filter, setFilter] = useState<Filter>("all");
 
   useFocusEffect(
     useCallback(() => {
-      fetchBookings();
-    }, [fetchBookings])
+      refetch();
+    }, [refetch])
   );
+
+  const filtered = useMemo(() => {
+    if (filter === "all") return bookings;
+    if (filter === "upcoming") return bookings.filter((b) => UPCOMING.has(b.status));
+    return bookings.filter((b) => b.status === filter);
+  }, [bookings, filter]);
+
+  const onCancel = (b: Booking) => {
+    if (!canCancel(b.booking_date, b.start_time)) {
+      Alert.alert(t("booking.cancel"), t("booking.cancel_too_late"));
+      return;
+    }
+    Alert.alert(t("booking.cancel"), t("booking.cancel_confirm"), [
+      { text: t("booking.stay"), style: "cancel" },
+      {
+        text: t("booking.cancel"),
+        style: "destructive",
+        onPress: async () => {
+          const { error } = await cancel(b.id);
+          if (!error) Alert.alert(t("booking.cancelled_ok"));
+        },
+      },
+    ]);
+  };
 
   if (!isAuthenticated) {
     return (
       <SafeAreaView style={styles.center} edges={["top"]}>
-        <Ionicons name="calendar-outline" size={48} color={Colors.textMuted} />
-        <Text style={styles.emptyTitle}>{t("booking.my_bookings")}</Text>
-        <Pressable
-          style={styles.loginBtn}
-          onPress={() => router.push("/login")}
-        >
-          <Text style={styles.loginText}>{t("auth.login")}</Text>
-        </Pressable>
+        <EmptyState
+          icon="calendar-outline"
+          title={t("booking.my_bookings")}
+          subtitle={t("auth.login_subtitle")}
+          actionLabel={t("auth.login")}
+          onAction={() => router.push("/login")}
+        />
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>
-      <Text style={styles.title}>{t("booking.my_bookings")}</Text>
-      {loading ? (
-        <ActivityIndicator
-          color={Colors.primary}
-          size="large"
-          style={{ marginTop: 40 }}
-        />
-      ) : (
-        <FlatList
-          data={bookings}
-          keyExtractor={(b) => b.id}
-          contentContainerStyle={{ padding: 16 }}
-          onRefresh={fetchBookings}
-          refreshing={loading}
-          ListEmptyComponent={
-            <Text style={styles.empty}>{t("mybookings.all")}: 0</Text>
-          }
-          renderItem={({ item }) => {
-            const name =
-              localize(item.business_name) ||
-              t("mybookings.unknown_provider");
-            const color = STATUS_COLOR[item.status] ?? Colors.textMuted;
-            return (
-              <View style={styles.card}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.provName}>{name}</Text>
-                  <Text style={styles.dateText}>
-                    {item.booking_date} · {item.start_time?.slice(0, 5)}–
-                    {item.end_time?.slice(0, 5)}
+      <Text variant="h2" style={styles.title}>
+        {t("booking.my_bookings")}
+      </Text>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.filters}
+      >
+        {(["all", "upcoming", "completed", "cancelled"] as Filter[]).map((f) => (
+          <Chip
+            key={f}
+            label={t(f === "all" ? "status.all" : (`status.${f}` as any))}
+            size="sm"
+            active={filter === f}
+            onPress={() => setFilter(f)}
+          />
+        ))}
+      </ScrollView>
+
+      <FlatList
+        data={filtered}
+        keyExtractor={(b) => b.id}
+        contentContainerStyle={styles.list}
+        showsVerticalScrollIndicator={false}
+        onRefresh={refetch}
+        refreshing={loading && bookings.length > 0}
+        renderItem={({ item }) => {
+          const name = localize(item.provider?.business_name) || t("mybookings.unknown_provider");
+          const meta = statusMeta(item.status);
+          const showCancel = UPCOMING.has(item.status);
+          return (
+            <View style={styles.card}>
+              <View style={styles.cardTop}>
+                <Avatar uri={item.provider?.avatar_url} name={name} size={52} />
+                <View style={styles.flex}>
+                  <View style={styles.nameRow}>
+                    <Text variant="bodyStrong" numberOfLines={1} style={styles.flex}>
+                      {name}
+                    </Text>
+                    <Badge label={t(meta.key)} tone={meta.tone} />
+                  </View>
+                  <Text variant="caption" muted style={styles.date}>
+                    {formatDateFull(item.booking_date, lang)}
+                  </Text>
+                  <Text variant="caption" color={Colors.primaryDark}>
+                    {item.start_time?.slice(0, 5)}–{item.end_time?.slice(0, 5)}
+                    {item.duration_minutes ? ` · ${item.duration_minutes} ${t("common.min")}` : ""}
                   </Text>
                 </View>
-                <View style={[styles.badge, { backgroundColor: color }]}>
-                  <Text style={styles.badgeText}>{item.status}</Text>
-                </View>
               </View>
-            );
-          }}
-        />
-      )}
+
+              {!!item.notes && (
+                <Text variant="caption" muted style={styles.notes}>
+                  {t("booking.notes")}: {item.notes}
+                </Text>
+              )}
+
+              <View style={styles.actions}>
+                {item.provider?.slug && (
+                  <Button
+                    label={t("mybookings.view_details")}
+                    variant="secondary"
+                    size="sm"
+                    fullWidth={false}
+                    onPress={() => router.push(`/provider/${item.provider!.slug}`)}
+                    style={styles.flex}
+                  />
+                )}
+                {showCancel && (
+                  <Button
+                    label={t("booking.cancel")}
+                    variant="outline"
+                    size="sm"
+                    fullWidth={false}
+                    icon="close"
+                    onPress={() => onCancel(item)}
+                  />
+                )}
+              </View>
+            </View>
+          );
+        }}
+        ListEmptyComponent={
+          loading ? (
+            <View>
+              {Array.from({ length: 4 }, (_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </View>
+          ) : (
+            <EmptyState
+              icon="calendar-clear-outline"
+              title={t("hist.no_bookings")}
+              subtitle={t("hist.no_bookings_yet")}
+              actionLabel={t("fav.explore")}
+              onAction={() => router.push("/")}
+            />
+          )
+        }
+      />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
-  center: {
-    flex: 1,
-    backgroundColor: Colors.background,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 12,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "800",
-    color: Colors.text,
-    paddingHorizontal: 16,
-    paddingTop: 8,
-  },
+  center: { flex: 1, backgroundColor: Colors.background, justifyContent: "center" },
+  flex: { flex: 1 },
+  title: { paddingHorizontal: spacing.lg, paddingTop: spacing.xs },
+  filters: { gap: spacing.sm, paddingHorizontal: spacing.lg, paddingVertical: spacing.md },
+  list: { paddingHorizontal: spacing.lg, paddingBottom: spacing.huge },
   card: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Colors.card,
+    backgroundColor: Colors.cardElevated,
+    borderRadius: radius.lg,
     borderWidth: 1,
     borderColor: Colors.border,
-    borderRadius: 14,
-    padding: 14,
-    marginBottom: 12,
+    padding: spacing.md,
+    marginBottom: spacing.md,
+    gap: spacing.sm,
+    ...shadow.sm,
   },
-  provName: { fontSize: 16, fontWeight: "700", color: Colors.text },
-  dateText: { fontSize: 13, color: Colors.textMuted, marginTop: 3 },
-  badge: { borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4 },
-  badgeText: { color: "#fff", fontSize: 12, fontWeight: "600" },
-  emptyTitle: { fontSize: 18, fontWeight: "700", color: Colors.text },
-  empty: { textAlign: "center", color: Colors.textMuted, marginTop: 40 },
-  loginBtn: {
-    backgroundColor: Colors.primary,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 12,
-    marginTop: 8,
-  },
-  loginText: { color: Colors.primaryForeground, fontWeight: "700" },
+  cardTop: { flexDirection: "row", gap: spacing.md },
+  nameRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  date: { marginTop: 2 },
+  notes: { fontStyle: "italic" },
+  actions: { flexDirection: "row", gap: spacing.sm, alignItems: "center" },
 });

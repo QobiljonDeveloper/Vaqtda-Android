@@ -1,18 +1,10 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Pressable, StyleSheet, View } from "react-native";
 
+import { Button, IconButton, Input, Screen, Text } from "@/components/ui";
 import { Colors } from "@/constants/colors";
+import { spacing } from "@/constants/theme";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -38,82 +30,63 @@ export default function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={styles.flex}
-      >
-        <View style={styles.content}>
-          <Text style={styles.title}>{t("auth.welcome_back")}</Text>
-          <Text style={styles.subtitle}>{t("auth.login_subtitle")}</Text>
+    <Screen scroll keyboard padded background={Colors.background}>
+      <View style={styles.top}>
+        <IconButton icon="close" onPress={() => router.back()} />
+      </View>
+      <View style={styles.content}>
+        <Text variant="display">{t("auth.welcome_back")}</Text>
+        <Text variant="body" muted style={styles.sub}>
+          {t("auth.login_subtitle")}
+        </Text>
 
-          <TextInput
-            style={styles.input}
-            placeholder={t("auth.email_placeholder")}
-            placeholderTextColor={Colors.textMuted}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder={t("auth.password_placeholder")}
-            placeholderTextColor={Colors.textMuted}
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
+        <Input
+          icon="mail-outline"
+          placeholder={t("auth.email_placeholder")}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+        />
+        <Input
+          icon="lock-closed-outline"
+          placeholder={t("auth.password_placeholder")}
+          password
+          value={password}
+          onChangeText={setPassword}
+        />
 
-          {error && <Text style={styles.error}>{error}</Text>}
+        <Pressable onPress={() => router.push("/forgot-password")} style={styles.forgot}>
+          <Text variant="caption" color={Colors.primaryDark}>
+            {t("auth.forgot")}
+          </Text>
+        </Pressable>
 
-          <Pressable
-            style={[styles.btn, loading && styles.btnDisabled]}
-            onPress={onSubmit}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color={Colors.primaryForeground} />
-            ) : (
-              <Text style={styles.btnText}>{t("auth.login")}</Text>
-            )}
-          </Pressable>
+        {error && (
+          <Text variant="caption" color={Colors.danger}>
+            {error}
+          </Text>
+        )}
 
-          <Pressable onPress={() => router.replace("/register")}>
-            <Text style={styles.link}>{t("auth.signup")}</Text>
-          </Pressable>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        <Button label={t("auth.login")} onPress={onSubmit} loading={loading} size="lg" />
+
+        <Pressable onPress={() => router.replace("/register")} style={styles.link}>
+          <Text variant="body" muted>
+            {t("auth.register_subtitle")}{" "}
+            <Text variant="bodyStrong" color={Colors.primaryDark}>
+              {t("auth.signup")}
+            </Text>
+          </Text>
+        </Pressable>
+      </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.background },
-  flex: { flex: 1 },
-  content: { flex: 1, justifyContent: "center", padding: 24, gap: 14 },
-  title: { fontSize: 28, fontWeight: "800", color: Colors.text },
-  subtitle: { fontSize: 15, color: Colors.textMuted, marginBottom: 8 },
-  input: {
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    height: 52,
-    fontSize: 16,
-    color: Colors.text,
-    backgroundColor: Colors.card,
-  },
-  btn: {
-    backgroundColor: Colors.primary,
-    height: 52,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 6,
-  },
-  btnDisabled: { opacity: 0.6 },
-  btnText: { color: Colors.primaryForeground, fontWeight: "700", fontSize: 16 },
-  link: { color: Colors.primaryDark, fontWeight: "600", textAlign: "center" },
-  error: { color: Colors.danger, fontSize: 14 },
+  top: { flexDirection: "row" },
+  content: { gap: spacing.md, marginTop: spacing.lg },
+  sub: { marginBottom: spacing.sm },
+  forgot: { alignSelf: "flex-end", marginTop: -spacing.xs },
+  link: { alignItems: "center", marginTop: spacing.md },
 });
