@@ -23,7 +23,9 @@ interface AuthContextType {
   register: (
     email: string,
     password: string,
-    fullName: string
+    fullName: string,
+    phone?: string,
+    role?: "Client" | "Specialist"
   ) => Promise<{ error?: string }>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -98,11 +100,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return error ? { error: error.message } : {};
   };
 
-  const register = async (email: string, password: string, fullName: string) => {
+  const register = async (
+    email: string,
+    password: string,
+    fullName: string,
+    phone = "",
+    role: "Client" | "Specialist" = "Client"
+  ) => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName } },
+      // Web bilan bir xil metadata — trigger profiles yozuvini yaratadi.
+      options: { data: { full_name: fullName, phone, role, email } },
     });
     return error ? { error: error.message } : {};
   };

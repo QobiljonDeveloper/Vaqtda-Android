@@ -431,6 +431,89 @@ export const uz = {
   "ab.about": "Biznes haqida",
   "ab.about_ph": "Mijozlarga xizmatlaringiz haqida yozing...",
   "ab.phone": "Biznes telefon raqami",
+
+  // ── Umumiy (qo'shimcha) ──
+  "common.retry": "Qayta urinish",
+  "common.delete": "O'chirish",
+  "common.edit": "Tahrirlash",
+  "common.share": "Ulashish",
+  "common.close": "Yopish",
+  "common.yes": "Ha",
+  "common.no": "Yo'q",
+  "common.see_all": "Hammasini ko'rish",
+  "common.error": "Xatolik yuz berdi",
+  "common.required": "Majburiy maydon",
+
+  // ── Bildirishnomalar ──
+  "notif.title": "Bildirishnomalar",
+  "notif.empty_title": "Bildirishnoma yo'q",
+  "notif.empty_desc": "Yangiliklar va bron yangilanishlari shu yerda chiqadi.",
+  "notif.mark_all": "Hammasi o'qildi",
+  "notif.loading": "Yuklanmoqda...",
+  "notif.login_desc": "Bildirishnomalarni ko'rish uchun tizimga kiring.",
+
+  // ── Qidiruv (hudud/geo) ──
+  "search.near_me": "Yaqinimda",
+  "search.all_regions": "Barcha hududlar",
+  "search.locating": "Joylashuv aniqlanmoqda...",
+  "search.location_denied": "Joylashuvga ruxsat berilmadi",
+  "search.distance_km": "{km} km uzoqlikda",
+  "search.distance_m": "{m} m uzoqlikda",
+
+  // ── Ulashish ──
+  "share.message": "{name} — Vaqtda.uz'da bron qiling",
+
+  // ── Profil/xarita ──
+  "profile.open_map": "Xaritada ochish",
+
+  // ── Booking (bekor qilish) ──
+  "booking.cancel": "Bronni bekor qilish",
+  "booking.cancel_confirm": "Bu bronni bekor qilasizmi?",
+  "booking.cancel_too_late": "Boshlanishiga 24 soatdan kam qolganda bekor qilib bo'lmaydi.",
+  "booking.cancelled_ok": "Bron bekor qilindi",
+  "booking.notes": "Izoh",
+
+  // ── Menyu (profil) ──
+  "menu.my_bookings": "Bronlarim",
+  "menu.favorites": "Sevimlilar",
+  "menu.notifications": "Bildirishnomalar",
+  "menu.settings": "Sozlamalar",
+  "menu.contact": "Aloqa",
+  "menu.provider_dashboard": "Provayder kabineti",
+  "menu.add_business": "Biznes qo'shish",
+
+  // ── Sozlamalar (qo'shimcha) ──
+  "settings.account": "Hisob",
+  "settings.change_password": "Parolni o'zgartirish",
+  "settings.language": "Til",
+  "settings.provider_zone": "Provayder bo'limi",
+
+  // ── Provayder dashboard ──
+  "pdash.manage_business": "Biznesni boshqarish",
+  "pdash.edit_business": "Biznesni tahrirlash",
+  "pdash.schedule": "Jadval",
+  "pdash.stats": "Statistika",
+  "pdash.upcoming_bookings": "Bo'lajak bronlar",
+  "pdash.no_bookings": "Hozircha bron yo'q",
+  "pdash.today_schedule": "Bugungi jadval",
+  "pdash.become_provider": "Provayder bo'ling",
+  "pdash.become_desc": "Biznesingizni qo'shing va mijozlardan bron qabul qiling.",
+  "pdash.create_timetable": "Jadval yaratish",
+
+  // ── Statistika ──
+  "stats.title": "Statistika",
+  "stats.revenue": "Daromad",
+  "stats.total_bookings": "Jami bronlar",
+  "stats.upcoming": "Bo'lajak",
+  "stats.completed": "Yakunlangan",
+  "stats.cancelled": "Bekor qilingan",
+  "stats.clients": "Mijozlar",
+  "stats.occupancy": "Bandlik",
+  "stats.by_weekday": "Hafta kunlari bo'yicha",
+  "stats.by_hour": "Soatlar bo'yicha",
+  "stats.empty": "Statistika uchun ma'lumot yo'q",
+  "stats.last7": "Oxirgi 7 kun",
+  "stats.last30": "Oxirgi 30 kun",
 } as const;
 
 export type TKey = keyof typeof uz;

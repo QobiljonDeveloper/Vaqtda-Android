@@ -49,3 +49,8 @@
   url-polyfill, expo-notifications, expo-image-picker, expo-location,
   react-native-webview, expo-clipboard, expo-haptics, @react-native-community/datetimepicker.
 - ⚠️ booking-mobile git remote yo'qligi aniqlandi.
+
+### F0 ✅ + F1 ✅ (commit 61163f4)
+- Paketlar to'liq o'rnatildi (npm install + expo install). vector-icons qo'shildi.
+- Template cruft o'chirildi. app.json yangilandi (iOS bundleId, plugin'lar, permissionlar).
+- Dizayn tizimi: src/constants/theme.ts + src/components/ui/* (16 primitiv). tsc TOZA.

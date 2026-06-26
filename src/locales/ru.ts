@@ -433,4 +433,87 @@ export const ru: Record<TKey, string> = {
   "ab.about": "О бизнесе",
   "ab.about_ph": "Расскажите клиентам о ваших услугах...",
   "ab.phone": "Телефон бизнеса",
+
+  // ── Общее (доп.) ──
+  "common.retry": "Повторить",
+  "common.delete": "Удалить",
+  "common.edit": "Редактировать",
+  "common.share": "Поделиться",
+  "common.close": "Закрыть",
+  "common.yes": "Да",
+  "common.no": "Нет",
+  "common.see_all": "Смотреть все",
+  "common.error": "Произошла ошибка",
+  "common.required": "Обязательное поле",
+
+  // ── Уведомления ──
+  "notif.title": "Уведомления",
+  "notif.empty_title": "Нет уведомлений",
+  "notif.empty_desc": "Новости и обновления броней появятся здесь.",
+  "notif.mark_all": "Прочитать все",
+  "notif.loading": "Загрузка...",
+  "notif.login_desc": "Войдите, чтобы видеть уведомления.",
+
+  // ── Поиск (регион/гео) ──
+  "search.near_me": "Рядом со мной",
+  "search.all_regions": "Все регионы",
+  "search.locating": "Определение местоположения...",
+  "search.location_denied": "Доступ к геолокации запрещён",
+  "search.distance_km": "в {km} км",
+  "search.distance_m": "в {m} м",
+
+  // ── Поделиться ──
+  "share.message": "{name} — забронируйте на Vaqtda.uz",
+
+  // ── Профиль/карта ──
+  "profile.open_map": "Открыть на карте",
+
+  // ── Бронь (отмена) ──
+  "booking.cancel": "Отменить бронь",
+  "booking.cancel_confirm": "Отменить эту бронь?",
+  "booking.cancel_too_late": "Нельзя отменить менее чем за 24 часа до начала.",
+  "booking.cancelled_ok": "Бронь отменена",
+  "booking.notes": "Заметка",
+
+  // ── Меню (профиль) ──
+  "menu.my_bookings": "Мои брони",
+  "menu.favorites": "Избранное",
+  "menu.notifications": "Уведомления",
+  "menu.settings": "Настройки",
+  "menu.contact": "Связаться",
+  "menu.provider_dashboard": "Кабинет провайдера",
+  "menu.add_business": "Добавить бизнес",
+
+  // ── Настройки (доп.) ──
+  "settings.account": "Аккаунт",
+  "settings.change_password": "Изменить пароль",
+  "settings.language": "Язык",
+  "settings.provider_zone": "Раздел провайдера",
+
+  // ── Дашборд провайдера ──
+  "pdash.manage_business": "Управление бизнесом",
+  "pdash.edit_business": "Редактировать бизнес",
+  "pdash.schedule": "Расписание",
+  "pdash.stats": "Статистика",
+  "pdash.upcoming_bookings": "Предстоящие брони",
+  "pdash.no_bookings": "Пока нет броней",
+  "pdash.today_schedule": "Расписание на сегодня",
+  "pdash.become_provider": "Станьте провайдером",
+  "pdash.become_desc": "Добавьте бизнес и принимайте брони от клиентов.",
+  "pdash.create_timetable": "Создать расписание",
+
+  // ── Статистика ──
+  "stats.title": "Статистика",
+  "stats.revenue": "Доход",
+  "stats.total_bookings": "Всего броней",
+  "stats.upcoming": "Предстоящие",
+  "stats.completed": "Завершённые",
+  "stats.cancelled": "Отменённые",
+  "stats.clients": "Клиенты",
+  "stats.occupancy": "Загруженность",
+  "stats.by_weekday": "По дням недели",
+  "stats.by_hour": "По часам",
+  "stats.empty": "Нет данных для статистики",
+  "stats.last7": "Последние 7 дней",
+  "stats.last30": "Последние 30 дней",
 };
