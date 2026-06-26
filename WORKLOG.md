@@ -54,3 +54,14 @@
 - Paketlar to'liq o'rnatildi (npm install + expo install). vector-icons qo'shildi.
 - Template cruft o'chirildi. app.json yangilandi (iOS bundleId, plugin'lar, permissionlar).
 - Dizayn tizimi: src/constants/theme.ts + src/components/ui/* (16 primitiv). tsc TOZA.
+
+### Shared qatlam ✅ (commit 0145e97)
+- locale kalitlari (notif/geo/share/stats/menu/cancel/home), lib/format, lib/upload, lib/push,
+  hooks useReviews/useBookings/useRegions, NotificationsContext, AuthContext register(phone+role).
+
+### F3 ✅ F4 ✅ F8 ✅ (commit 99d0b72)
+- ProviderCard redesign (row+tile, soya, masofa, memo). NotificationsBell.
+- Home: discovery + top-rated + qidiruv. Search: region+geo. Kategoriya sahifasi.
+- Notifications: in-app + realtime + lokal push. Push regist. (remote push EAS+token kerak — keyin).
+
+### Keyingi: F5 (provayder detali — galereya/xarita/sharhlar/share)
