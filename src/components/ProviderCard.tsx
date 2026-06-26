@@ -1,25 +1,77 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { memo } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/colors";
-import { localize } from "@/lib/localize";
 import { FavoriteButton } from "@/components/FavoriteButton";
+import { Text } from "@/components/ui/Text";
+import { Colors } from "@/constants/colors";
+import { fontWeight, radius, shadow, spacing } from "@/constants/theme";
+import { localize } from "@/lib/localize";
 import type { ProviderRow } from "@/hooks/useProviders";
 
-export function ProviderCard({
-  provider,
-  onPress,
-}: {
+interface ProviderCardProps {
   provider: ProviderRow;
   onPress: () => void;
-}) {
+  variant?: "row" | "tile";
+  distanceLabel?: string;
+}
+
+function ProviderCardBase({ provider, onPress, variant = "row", distanceLabel }: ProviderCardProps) {
   const name = localize(provider.business_name) || provider.slug;
   const category = localize(provider.category_name);
   const region = localize(provider.region_name);
+  const rating = provider.rating ?? 0;
+  const reviews = provider.reviews_count ?? 0;
+
+  if (variant === "tile") {
+    return (
+      <Pressable
+        onPress={onPress}
+        style={({ pressed }) => [styles.tile, pressed && styles.pressed]}
+      >
+        <View>
+          <Image
+            source={{ uri: provider.avatar_url ?? undefined }}
+            style={styles.tileImage}
+            contentFit="cover"
+            transition={150}
+          />
+          <View style={styles.ratingBadge}>
+            <Ionicons name="star" size={11} color={Colors.star} />
+            <Text style={styles.ratingBadgeText}>{rating.toFixed(1)}</Text>
+          </View>
+          <View style={styles.tileFav}>
+            <FavoriteButton providerId={provider.id} size={18} />
+          </View>
+        </View>
+        <View style={styles.tileBody}>
+          <Text variant="bodyStrong" numberOfLines={1}>
+            {name}
+          </Text>
+          {!!category && (
+            <Text variant="caption" color={Colors.primaryDark} numberOfLines={1}>
+              {category}
+            </Text>
+          )}
+          {!!region && (
+            <View style={styles.metaRow}>
+              <Ionicons name="location-outline" size={12} color={Colors.textMuted} />
+              <Text variant="caption" muted numberOfLines={1} style={styles.flex}>
+                {distanceLabel || region}
+              </Text>
+            </View>
+          )}
+        </View>
+      </Pressable>
+    );
+  }
 
   return (
-    <Pressable style={styles.card} onPress={onPress}>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [styles.row, pressed && styles.pressed]}
+    >
       <Image
         source={{ uri: provider.avatar_url ?? undefined }}
         style={styles.avatar}
@@ -27,66 +79,97 @@ export function ProviderCard({
         transition={150}
       />
       <View style={styles.body}>
-        <Text style={styles.name} numberOfLines={1}>
+        <Text variant="bodyStrong" numberOfLines={1}>
           {name}
         </Text>
         {!!category && (
-          <Text style={styles.category} numberOfLines={1}>
+          <Text variant="caption" color={Colors.primaryDark} numberOfLines={1}>
             {category}
           </Text>
         )}
         <View style={styles.metaRow}>
           <Ionicons name="star" size={13} color={Colors.star} />
-          <Text style={styles.rating}>
-            {(provider.rating ?? 0).toFixed(1)}
+          <Text variant="caption" style={styles.ratingText}>
+            {rating.toFixed(1)}
           </Text>
-          <Text style={styles.reviews}>
-            ({provider.reviews_count ?? 0})
+          <Text variant="caption" muted>
+            ({reviews})
           </Text>
-          {!!region && (
+          {!!(distanceLabel || region) && (
             <>
-              <Ionicons
-                name="location-outline"
-                size={13}
-                color={Colors.textMuted}
-                style={{ marginLeft: 8 }}
-              />
-              <Text style={styles.region} numberOfLines={1}>
-                {region}
+              <View style={styles.dot} />
+              <Ionicons name="location-outline" size={12} color={Colors.textMuted} />
+              <Text variant="caption" muted numberOfLines={1} style={styles.flex}>
+                {distanceLabel || region}
               </Text>
             </>
           )}
         </View>
       </View>
-      <FavoriteButton providerId={provider.id} size={20} />
-      <Ionicons name="chevron-forward" size={20} color={Colors.textMuted} />
+      <View style={styles.rowRight}>
+        <FavoriteButton providerId={provider.id} size={20} />
+      </View>
     </Pressable>
   );
 }
 
+export const ProviderCard = memo(ProviderCardBase);
+
 const styles = StyleSheet.create({
-  card: {
+  pressed: { opacity: 0.95, transform: [{ scale: 0.99 }] },
+  flex: { flexShrink: 1 },
+
+  // Row
+  row: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.card,
-    borderRadius: 16,
-    padding: 12,
-    marginBottom: 12,
+    backgroundColor: Colors.cardElevated,
+    borderRadius: radius.lg,
+    padding: spacing.md,
+    marginBottom: spacing.md,
     borderWidth: 1,
     borderColor: Colors.border,
-    gap: 12,
+    gap: spacing.md,
+    ...shadow.sm,
   },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 12,
-    backgroundColor: Colors.border,
-  },
+  avatar: { width: 64, height: 64, borderRadius: radius.md, backgroundColor: Colors.skeleton },
   body: { flex: 1, gap: 2 },
-  name: { fontSize: 16, fontWeight: "700", color: Colors.text },
-  category: { fontSize: 13, color: Colors.primaryDark, fontWeight: "600" },
-  metaRow: { flexDirection: "row", alignItems: "center", marginTop: 2 },
-  rating: { fontSize: 13, fontWeight: "600", color: Colors.text, marginLeft: 3 },
-  reviews: { fontSize: 12, color: Colors.textMuted, marginLeft: 2 },
-  region: { fontSize: 12, color: Colors.textMuted, flexShrink: 1, marginLeft: 2 },
+  metaRow: { flexDirection: "row", alignItems: "center", gap: 3, marginTop: 3 },
+  ratingText: { fontWeight: fontWeight.bold, color: Colors.text },
+  dot: { width: 3, height: 3, borderRadius: 2, backgroundColor: Colors.borderStrong, marginHorizontal: 4 },
+  rowRight: { alignSelf: "flex-start" },
+
+  // Tile
+  tile: {
+    width: 184,
+    backgroundColor: Colors.cardElevated,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    marginRight: spacing.md,
+    overflow: "hidden",
+    ...shadow.sm,
+  },
+  tileImage: { width: "100%", height: 120, backgroundColor: Colors.skeleton },
+  tileBody: { padding: spacing.md, gap: 2 },
+  ratingBadge: {
+    position: "absolute",
+    top: 8,
+    left: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 3,
+    backgroundColor: "rgba(255,255,255,0.95)",
+    borderRadius: radius.pill,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  ratingBadgeText: { fontSize: 11, fontWeight: fontWeight.bold, color: Colors.text },
+  tileFav: {
+    position: "absolute",
+    top: 4,
+    right: 4,
+    backgroundColor: "rgba(255,255,255,0.9)",
+    borderRadius: radius.pill,
+  },
 });

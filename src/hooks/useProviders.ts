@@ -24,9 +24,15 @@ export interface ProviderRow {
 export interface CategoryRow {
   id: string;
   name: any; // {uz,ru,en}
+  slug: string;
+  image_url: string | null;
 }
 
-export function useProviders(search: string, categoryId: string | null) {
+export function useProviders(
+  search: string,
+  categoryId: string | null,
+  regionId: string | null = null
+) {
   const [providers, setProviders] = useState<ProviderRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +47,7 @@ export function useProviders(search: string, categoryId: string | null) {
         .eq("is_active", true);
 
       if (categoryId) q = q.eq("category_id", categoryId);
+      if (regionId) q = q.eq("region_id", regionId);
 
       if (search.trim()) {
         const s = search.trim();
@@ -49,7 +56,7 @@ export function useProviders(search: string, categoryId: string | null) {
         );
       }
 
-      const { data, error } = await q;
+      const { data, error } = await q.order("rating", { ascending: false });
       if (error) throw error;
       setProviders((data as ProviderRow[]) ?? []);
     } catch (e: any) {
@@ -57,7 +64,7 @@ export function useProviders(search: string, categoryId: string | null) {
     } finally {
       setLoading(false);
     }
-  }, [search, categoryId]);
+  }, [search, categoryId, regionId]);
 
   useEffect(() => {
     fetch();
@@ -71,10 +78,43 @@ export function useCategories() {
   useEffect(() => {
     supabase
       .from("categories")
-      .select("id, name")
+      .select("id, name, slug, image_url")
       .then(({ data }) => setCategories((data as CategoryRow[]) ?? []));
   }, []);
   return categories;
+}
+
+// Top-rated karusel (bosh sahifa) — RPC get_top_rated_providers.
+export function useTopRated() {
+  const [items, setItems] = useState<ProviderRow[]>([]);
+  useEffect(() => {
+    let active = true;
+    supabase.rpc("get_top_rated_providers").then(({ data }) => {
+      if (!active) return;
+      const mapped = ((data as any[]) ?? []).map((p) => ({
+        id: p.id,
+        user_id: "",
+        business_name: p.business_name,
+        slug: p.slug,
+        location: p.location ?? null,
+        about: null,
+        avatar_url: p.avatar_url ?? null,
+        rating: p.average_rating ?? p.rating ?? 0,
+        reviews_count: p.total_reviews ?? p.reviews_count ?? 0,
+        is_active: true,
+        phone_number: null,
+        category_id: null,
+        region_id: null,
+        category_name: p.category ?? p.category_name ?? null,
+        region_name: null,
+      })) as ProviderRow[];
+      setItems(mapped);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+  return items;
 }
 
 export function useProviderBySlug(slug: string | undefined) {

@@ -514,6 +514,12 @@ export const uz = {
   "stats.empty": "Statistika uchun ma'lumot yo'q",
   "stats.last7": "Oxirgi 7 kun",
   "stats.last30": "Oxirgi 30 kun",
+
+  // ── Bosh sahifa (bo'limlar) ──
+  "home.top_rated": "Eng yuqori baholangan",
+  "home.all_providers": "Barcha provayderlar",
+  "home.results": "{n} ta natija",
+  "home.greeting": "Xush kelibsiz 👋",
 } as const;
 
 export type TKey = keyof typeof uz;

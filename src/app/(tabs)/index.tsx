@@ -2,21 +2,22 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { NotificationsBell } from "@/components/NotificationsBell";
 import { ProviderCard } from "@/components/ProviderCard";
+import { Chip, EmptyState, SectionHeader, SkeletonCard, Text } from "@/components/ui";
 import { Colors } from "@/constants/colors";
+import { radius, shadow, spacing } from "@/constants/theme";
 import { useLanguage } from "@/context/LanguageContext";
-import { useCategories, useProviders } from "@/hooks/useProviders";
+import { useCategories, useProviders, useTopRated } from "@/hooks/useProviders";
 import { localize } from "@/lib/localize";
 
 export default function HomeScreen() {
@@ -26,151 +27,201 @@ export default function HomeScreen() {
   const [categoryId, setCategoryId] = useState<string | null>(null);
 
   const categories = useCategories();
+  const topRated = useTopRated();
   const { providers, loading, error, refetch } = useProviders(search, categoryId);
+
+  const isDiscovery = !search.trim() && !categoryId;
 
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.brand}>Vaqtda.uz</Text>
-          <Text style={styles.subtitle}>{t("search.title")}</Text>
+      {/* App bar */}
+      <View style={styles.appbar}>
+        <View style={styles.flex}>
+          <Text variant="caption" muted>
+            {t("home.greeting")}
+          </Text>
+          <Text variant="h2" color={Colors.primaryDark}>
+            Vaqtda
+          </Text>
         </View>
-        <Pressable style={styles.langBtn} onPress={toggle}>
-          <Text style={styles.langText}>{lang === "uz" ? "RU" : "UZ"}</Text>
+        <View style={styles.appbarRight}>
+          <NotificationsBell />
+          <Pressable style={styles.langBtn} onPress={toggle} hitSlop={6}>
+            <Text variant="label" color={Colors.text}>
+              {lang === "uz" ? "RU" : "UZ"}
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+
+      {/* Qidiruv (fiksatsiyalangan — fokus yo'qolmaydi) */}
+      <View style={styles.searchRow}>
+        <View style={styles.searchBox}>
+          <Ionicons name="search" size={19} color={Colors.textMuted} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder={t("search.placeholder_main")}
+            placeholderTextColor={Colors.textSubtle}
+            value={search}
+            onChangeText={setSearch}
+            returnKeyType="search"
+          />
+          {search.length > 0 && (
+            <Pressable onPress={() => setSearch("")} hitSlop={8}>
+              <Ionicons name="close-circle" size={18} color={Colors.textMuted} />
+            </Pressable>
+          )}
+        </View>
+        <Pressable style={styles.filterBtn} onPress={() => router.push("/search")}>
+          <Ionicons name="options-outline" size={22} color={Colors.primaryForeground} />
         </Pressable>
       </View>
 
-      {/* Qidiruv */}
-      <View style={styles.searchBox}>
-        <Ionicons name="search" size={18} color={Colors.textMuted} />
-        <TextInput
-          style={styles.searchInput}
-          placeholder={t("search.placeholder_main")}
-          placeholderTextColor={Colors.textMuted}
-          value={search}
-          onChangeText={setSearch}
-          returnKeyType="search"
-        />
-      </View>
-
-      {/* Kategoriyalar */}
-      <View style={styles.chipsWrap}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Chip
-            label={t("mybookings.all")}
-            active={categoryId === null}
-            onPress={() => setCategoryId(null)}
+      <FlatList
+        data={providers}
+        keyExtractor={(p) => p.id}
+        contentContainerStyle={styles.list}
+        showsVerticalScrollIndicator={false}
+        onRefresh={refetch}
+        refreshing={loading && providers.length > 0}
+        removeClippedSubviews
+        initialNumToRender={6}
+        renderItem={({ item }) => (
+          <ProviderCard
+            provider={item}
+            onPress={() => router.push(`/provider/${item.slug}`)}
           />
-          {categories.map((c) => (
-            <Chip
-              key={c.id}
-              label={localize(c.name)}
-              active={categoryId === c.id}
-              onPress={() => setCategoryId(c.id)}
-            />
-          ))}
-        </ScrollView>
-      </View>
+        )}
+        ListHeaderComponent={
+          <View>
+            {/* Kategoriyalar */}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.chips}
+            >
+              <Chip
+                label={t("mybookings.all")}
+                active={categoryId === null}
+                onPress={() => setCategoryId(null)}
+              />
+              {categories.map((c) => (
+                <Chip
+                  key={c.id}
+                  label={localize(c.name)}
+                  active={categoryId === c.id}
+                  onPress={() => setCategoryId((p) => (p === c.id ? null : c.id))}
+                />
+              ))}
+            </ScrollView>
 
-      {/* Ro'yxat */}
-      {loading ? (
-        <ActivityIndicator
-          color={Colors.primary}
-          style={{ marginTop: 40 }}
-          size="large"
-        />
-      ) : error ? (
-        <Text style={styles.error}>{error}</Text>
-      ) : (
-        <FlatList
-          data={providers}
-          keyExtractor={(p) => p.id}
-          contentContainerStyle={styles.list}
-          onRefresh={refetch}
-          refreshing={loading}
-          ListEmptyComponent={
-            <Text style={styles.empty}>{t("search.no_results")}</Text>
-          }
-          renderItem={({ item }) => (
-            <ProviderCard
-              provider={item}
-              onPress={() => router.push(`/provider/${item.slug}`)}
+            {/* Top-rated karusel (faqat discovery rejimida) */}
+            {isDiscovery && topRated.length > 0 && (
+              <View style={styles.topRated}>
+                <SectionHeader title={t("home.top_rated")} />
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.carousel}
+                >
+                  {topRated.map((p) => (
+                    <ProviderCard
+                      key={p.id}
+                      provider={p}
+                      variant="tile"
+                      onPress={() => router.push(`/provider/${p.slug}`)}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
+            )}
+
+            {/* Ro'yxat sarlavhasi */}
+            <View style={styles.listTitle}>
+              <Text variant="title">
+                {isDiscovery ? t("home.all_providers") : t("home.results", { n: providers.length })}
+              </Text>
+            </View>
+          </View>
+        }
+        ListEmptyComponent={
+          loading ? (
+            <View>
+              {Array.from({ length: 5 }, (_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </View>
+          ) : error ? (
+            <EmptyState
+              icon="cloud-offline-outline"
+              title={t("providers.error_title")}
+              subtitle={error}
+              actionLabel={t("common.retry")}
+              onAction={refetch}
             />
-          )}
-        />
-      )}
+          ) : (
+            <EmptyState
+              icon="search-outline"
+              title={t("search.no_results")}
+              subtitle={t("providers.empty_text")}
+            />
+          )
+        }
+      />
     </SafeAreaView>
-  );
-}
-
-function Chip({
-  label,
-  active,
-  onPress,
-}: {
-  label: string;
-  active: boolean;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable
-      style={[styles.chip, active && styles.chipActive]}
-      onPress={onPress}
-    >
-      <Text style={[styles.chipText, active && styles.chipTextActive]}>
-        {label}
-      </Text>
-    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
-  header: {
+  flex: { flex: 1 },
+  appbar: {
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 8,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.xs,
+    paddingBottom: spacing.sm,
   },
-  brand: { fontSize: 24, fontWeight: "800", color: Colors.primaryDark },
-  subtitle: { fontSize: 13, color: Colors.textMuted, maxWidth: 250 },
+  appbarRight: { flexDirection: "row", alignItems: "center", gap: spacing.md },
   langBtn: {
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: Colors.border,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    borderRadius: radius.sm,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
   },
-  langText: { fontWeight: "700", color: Colors.text },
+  searchRow: {
+    flexDirection: "row",
+    gap: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.md,
+  },
   searchBox: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: spacing.sm,
     backgroundColor: Colors.card,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: Colors.border,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    marginHorizontal: 16,
-    marginTop: 14,
-    height: 46,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
+    height: 50,
   },
   searchInput: { flex: 1, fontSize: 15, color: Colors.text },
-  chipsWrap: { paddingLeft: 16, marginTop: 14 },
-  chip: {
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: 999,
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    marginRight: 8,
+  filterBtn: {
+    width: 50,
+    height: 50,
+    borderRadius: radius.md,
+    backgroundColor: Colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    ...shadow.sm,
   },
-  chipActive: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  chipText: { color: Colors.textMuted, fontWeight: "600", fontSize: 13 },
-  chipTextActive: { color: Colors.primaryForeground },
-  list: { padding: 16 },
-  error: { textAlign: "center", color: Colors.danger, marginTop: 40 },
-  empty: { textAlign: "center", color: Colors.textMuted, marginTop: 40 },
+  list: { paddingHorizontal: spacing.lg, paddingBottom: spacing.huge },
+  chips: { gap: spacing.sm, paddingVertical: spacing.xs, paddingRight: spacing.lg },
+  topRated: { marginTop: spacing.lg },
+  carousel: { paddingVertical: spacing.xs, paddingRight: spacing.lg },
+  listTitle: { marginTop: spacing.lg, marginBottom: spacing.sm },
 });

@@ -516,4 +516,10 @@ export const ru: Record<TKey, string> = {
   "stats.empty": "Нет данных для статистики",
   "stats.last7": "Последние 7 дней",
   "stats.last30": "Последние 30 дней",
+
+  // ── Главная (разделы) ──
+  "home.top_rated": "С высоким рейтингом",
+  "home.all_providers": "Все провайдеры",
+  "home.results": "{n} результатов",
+  "home.greeting": "Добро пожаловать 👋",
 };
