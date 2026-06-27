@@ -17,9 +17,12 @@ export function useRegions() {
       .from("regions")
       .select("id, name, slug")
       .eq("is_active", true)
-      .then(({ data }) => {
-        if (active) setRegions((data as RegionRow[]) ?? []);
-      });
+      .then(
+        ({ data }) => {
+          if (active) setRegions((data as RegionRow[]) ?? []);
+        },
+        () => {}
+      );
     return () => {
       active = false;
     };

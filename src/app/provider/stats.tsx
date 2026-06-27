@@ -40,7 +40,10 @@ export default function StatsScreen() {
         .from("bookings")
         .select("client_id, booking_date, status, duration_minutes, price")
         .eq("provider_id", provider.id)
-        .then(({ data }) => setRows((data as Bk[]) ?? []));
+        .then(
+          ({ data }) => setRows((data as Bk[]) ?? []),
+          () => setRows([])
+        );
     }, [provider])
   );
 

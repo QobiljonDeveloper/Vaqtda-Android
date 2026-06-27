@@ -64,4 +64,25 @@
 - Home: discovery + top-rated + qidiruv. Search: region+geo. Kategoriya sahifasi.
 - Notifications: in-app + realtime + lokal push. Push regist. (remote push EAS+token kerak — keyin).
 
-### Keyingi: F5 (provayder detali — galereya/xarita/sharhlar/share)
+### F5 ✅ (f874d25) — galereya, Yandex xarita, sharhlar (upsert/report), share, booking sheet
+### F6+F7+F9 ✅ (f2b90b7) — bookings (filtr+bekor 24s), profil hub, settings (avatar/parol), forgot-pw OTP, login/register (telefon+role), contact
+### F10 ✅ (15d735c) — provayder: add-business, dashboard, create-timetable (haftalik→sanalar), stats
+### F11 ✅ + Q1 (qisman, 7d579b1/9763da1/14876c2)
+- Tab bar sayqal (focused ikonlar). Qidiruvga debounce. ReviewsSection cheksiz-loop bug fix.
+- ProviderCard memo. Skeleton/haptics/press-animatsiya butun appda.
+- ⚠️ Dark mode: hozircha faqat light tema (StatusBar dark). To'liq dark — keyingi bosqich.
+
+### ✅ TASDIQ: `npx expo export --platform ios` MUVAFFAQIYATLI (exit 0) — butun app bundle bo'ladi,
+   barcha route/import/native modul to'g'ri. tsc --noEmit TOZA.
+
+### Qolgan ish
+- Q1 chuqur review (agent ishlamoqda) → topilgan buglarni tuzatish.
+- Q2: web SEO. Q3: web bug/opt.
+- F12: yakuniy export + WORKLOG.
+
+### ⚠️ UYG'ONGANDA QILINADIGAN QADAMLAR
+1. **Git remote yo'q** → `cd ~/desktop/booking-mobile && git remote add origin <URL> && git push -u origin main`.
+2. **Remote push (ilova yopiq)**: EAS project kerak (`eas init` → projectId app.json'ga) + push token
+   DB'da saqlanishi kerak (masalan profiles.expo_push_token ustuni — DB'ga men tegmadim). Hozir:
+   in-app ro'yxat + realtime + ilova ochiqligida lokal banner ISHLAYDI.
+- Maxfiy kalitlar (Gemini/Telegram/service_role) mobilga QO'YILMAGAN (xavfsizlik).

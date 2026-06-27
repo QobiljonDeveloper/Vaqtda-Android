@@ -79,7 +79,10 @@ export function useCategories() {
     supabase
       .from("categories")
       .select("id, name, slug, image_url")
-      .then(({ data }) => setCategories((data as CategoryRow[]) ?? []));
+      .then(
+        ({ data }) => setCategories((data as CategoryRow[]) ?? []),
+        () => {}
+      );
   }, []);
   return categories;
 }
@@ -109,7 +112,7 @@ export function useTopRated() {
         region_name: null,
       })) as ProviderRow[];
       setItems(mapped);
-    });
+    }, () => {});
     return () => {
       active = false;
     };
@@ -117,23 +120,3 @@ export function useTopRated() {
   return items;
 }
 
-export function useProviderBySlug(slug: string | undefined) {
-  const [provider, setProvider] = useState<ProviderRow | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!slug) return;
-    setLoading(true);
-    supabase
-      .from("provider_search_view")
-      .select("*")
-      .eq("slug", slug)
-      .maybeSingle()
-      .then(({ data }) => {
-        setProvider(data as ProviderRow | null);
-        setLoading(false);
-      });
-  }, [slug]);
-
-  return { provider, loading };
-}

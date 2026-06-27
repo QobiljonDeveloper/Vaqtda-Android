@@ -39,7 +39,7 @@ export default function SettingsScreen() {
           setPhone(data.phone ?? "");
           setAvatarUrl(data.avatar_url ?? null);
         }
-      });
+      }, () => {});
   }, [user]);
 
   const onChangeAvatar = async () => {

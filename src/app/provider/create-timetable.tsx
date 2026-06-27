@@ -72,7 +72,7 @@ export default function CreateTimetableScreen() {
         if (data.flexible_min != null) setFlexibleMin(String(data.flexible_min));
         if (data.buffer_minutes != null) setBuffer(String(data.buffer_minutes));
         if (data.schedule_days != null) setScheduleDays(String(data.schedule_days));
-      });
+      }, () => {});
   }, [provider]);
 
   const setDay = (key: string, patch: Partial<DayPattern>) =>

@@ -43,7 +43,10 @@ export default function ProviderDashboard() {
       if (!provider) return;
       supabase
         .rpc("get_busy_slots", { p_provider: provider.id, p_from: today, p_to: addDaysStr(today, 60) })
-        .then(({ data }) => setBusy(((data as Busy[]) ?? []).sort(sortBusy)));
+        .then(
+          ({ data }) => setBusy(((data as Busy[]) ?? []).sort(sortBusy)),
+          () => setBusy([])
+        );
     }, [provider, today])
   );
 

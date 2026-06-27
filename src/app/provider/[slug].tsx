@@ -57,19 +57,17 @@ export default function ProviderScreen() {
 
   useEffect(() => {
     if (!slug) return;
+    setLoading(true);
     (async () => {
-      setLoading(true);
-      const { data: prov } = await supabase
-        .from("provider_search_view")
-        .select("*")
-        .eq("slug", slug)
-        .maybeSingle();
+      try {
+        const { data: prov } = await supabase
+          .from("provider_search_view")
+          .select("*")
+          .eq("slug", slug)
+          .maybeSingle();
 
-      if (!prov) {
-        setLoading(false);
-        return;
-      }
-      setProvider(prov);
+        if (!prov) return;
+        setProvider(prov);
 
       const [cfgRes, slotsRes, brsRes] = await Promise.all([
         supabase.from("timetable_config").select("*").eq("provider_id", prov.id).maybeSingle(),
@@ -109,9 +107,13 @@ export default function ProviderScreen() {
         setBookings((bk as BusyBooking[]) ?? []);
       }
 
-      const dates = availableDates(slots, today);
-      if (dates.length) setDate(dates[0]);
-      setLoading(false);
+        const dates = availableDates(slots, today);
+        if (dates.length) setDate(dates[0]);
+      } catch {
+        /* xato — finally loading'ni o'chiradi */
+      } finally {
+        setLoading(false);
+      }
     })();
   }, [slug]);
 
