@@ -35,29 +35,41 @@ export function MapCard({ location, label, title }: MapCardProps) {
   m.behaviors.disable("scrollZoom");});
   </script></body></html>`;
 
-  const openExternal = () => {
-    const url = Platform.select({
-      ios: `https://yandex.com/maps/?ll=${lng},${lat}&z=16&pt=${lng},${lat}`,
-      default: `geo:${lat},${lng}?q=${lat},${lng}`,
-    });
-    Linking.openURL(url!).catch(() =>
-      Linking.openURL(`https://yandex.com/maps/?ll=${lng},${lat}&z=16&pt=${lng},${lat}`)
-    );
+  const openMapApp = async () => {
+    const url = `https://yandex.ru/maps/?pt=${lng},${lat}&z=16&l=map`;
+    try {
+      await Linking.openURL(url);
+    } catch (error) {
+      console.error("Xaritani ochishda xatolik:", error);
+    }
   };
+
+  const { createElement } = require("react-native");
+
+  const mapContent =
+    Platform.OS === "web" ? (
+      createElement("iframe", {
+        src: `https://yandex.com/map-widget/v1/?ll=${lng},${lat}&z=15&pt=${lng},${lat},pm2rdl`,
+        width: "100%",
+        height: "100%",
+        style: { border: 0 },
+        allowFullScreen: true,
+      })
+    ) : (
+      <WebView
+        source={{ html }}
+        style={styles.map}
+        originWhitelist={["*"]}
+        javaScriptEnabled
+        scrollEnabled={false}
+        pointerEvents="none"
+      />
+    );
 
   return (
     <View style={styles.wrap}>
-      <View style={styles.mapBox}>
-        <WebView
-          source={{ html }}
-          style={styles.map}
-          originWhitelist={["*"]}
-          javaScriptEnabled
-          scrollEnabled={false}
-          pointerEvents="none"
-        />
-      </View>
-      <Pressable style={styles.btn} onPress={openExternal}>
+      <View style={styles.mapBox}>{mapContent}</View>
+      <Pressable style={styles.btn} onPress={openMapApp}>
         <Ionicons name="navigate" size={16} color={Colors.primaryDark} />
         <Text variant="bodyStrong" color={Colors.primaryDark}>
           {label}
@@ -71,11 +83,9 @@ const styles = StyleSheet.create({
   wrap: { gap: spacing.sm },
   mapBox: {
     height: 170,
-    borderRadius: radius.lg,
+    borderRadius: 12,
     overflow: "hidden",
-    borderWidth: 1,
-    borderColor: Colors.border,
-    backgroundColor: Colors.skeleton,
+    backgroundColor: "#1e2024",
   },
   map: { flex: 1 },
   btn: {

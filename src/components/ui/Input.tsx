@@ -111,7 +111,8 @@ const styles = StyleSheet.create({
     color: Colors.text,
     fontWeight: fontWeight.medium,
     paddingVertical: spacing.md,
-  },
+    outlineStyle: "none",
+  } as any,
   inputMultiline: { minHeight: 96, textAlignVertical: "top" },
   error: { marginLeft: 2 },
 });

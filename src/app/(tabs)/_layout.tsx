@@ -14,13 +14,17 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: Colors.primaryDark,
         tabBarInactiveTintColor: Colors.textMuted,
-        tabBarLabelStyle: { fontSize: 11, fontWeight: "600" },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: "600",
+          paddingBottom: Platform.OS === "web" ? 8 : 0,
+        },
         tabBarStyle: {
           borderTopColor: Colors.border,
           backgroundColor: Colors.background,
-          height: Platform.OS === "ios" ? 86 : 64,
-          paddingTop: 6,
-          paddingBottom: Platform.OS === "ios" ? 28 : 8,
+          height: Platform.OS === "ios" ? 88 : Platform.OS === "web" ? 60 : 64,
+          paddingTop: 4,
+          paddingBottom: Platform.OS === "ios" ? 28 : 0,
         },
       }}
     >
@@ -54,7 +58,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: t("header.dashboard"),
+          title: t("dash.nav_dashboard"),
           tabBarIcon: ({ color, size, focused }) => (
             <Ionicons name={focused ? "person" : "person-outline"} color={color} size={size} />
           ),

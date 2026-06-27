@@ -1,15 +1,17 @@
 import "react-native-url-polyfill/auto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
-import { AppState } from "react-native";
+import { AppState, Platform } from "react-native";
 
 const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!;
 
+const isSSR = typeof window === "undefined";
+
 // Web'dagi createBrowserClient o'rniga — RN uchun AsyncStorage bilan sessiya saqlanadi.
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    storage: AsyncStorage,
+    storage: isSSR ? undefined : AsyncStorage,
     autoRefreshToken: true,
     persistSession: true,
     // RN'da URL orqali sessiya yo'q (faqat web OAuth redirect uchun kerak).

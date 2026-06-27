@@ -8,6 +8,7 @@ import { Colors } from "@/constants/colors";
 import { radius, shadow, spacing } from "@/constants/theme";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { useThemeMode, type ThemeMode } from "@/context/ThemeContext";
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -98,6 +99,7 @@ export default function ProfileScreen() {
         </View>
 
         <LangSwitch lang={lang} setLang={setLang} t={t} />
+        <ThemeSwitch />
 
         <View style={styles.logout}>
           <Button
@@ -152,6 +154,39 @@ function LangSwitch({
               color={lang === l ? Colors.primaryForeground : Colors.textMuted}
             >
               {l.toUpperCase()}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function ThemeSwitch() {
+  const { mode, setMode } = useThemeMode();
+  const modes: { id: ThemeMode; label: string }[] = [
+    { id: "light", label: "Светлая" },
+    { id: "dark", label: "Тёмная" },
+    { id: "system", label: "Системная" },
+  ];
+
+  return (
+    <View style={styles.langWrap}>
+      <Text variant="label" muted style={styles.sectionLabel}>
+        РЕЖИМ ТЕМЫ
+      </Text>
+      <View style={styles.langRow}>
+        {modes.map((m) => (
+          <Pressable
+            key={m.id}
+            style={[styles.langChip, mode === m.id && styles.langChipActive]}
+            onPress={() => setMode(m.id)}
+          >
+            <Text
+              variant="caption"
+              color={mode === m.id ? Colors.primaryForeground : Colors.textMuted}
+            >
+              {m.label}
             </Text>
           </Pressable>
         ))}

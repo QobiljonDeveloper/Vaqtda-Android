@@ -91,6 +91,7 @@ export default function BookingsScreen() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
+        style={styles.filterScroll}
         contentContainerStyle={styles.filters}
       >
         {(["all", "upcoming", "completed", "cancelled"] as Filter[]).map((f) => (
@@ -193,8 +194,9 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   center: { flex: 1, backgroundColor: Colors.background, justifyContent: "center" },
   flex: { flex: 1 },
-  title: { paddingHorizontal: spacing.lg, paddingTop: spacing.xs },
-  filters: { gap: spacing.sm, paddingHorizontal: spacing.lg, paddingVertical: spacing.md },
+  title: { paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: spacing.xs },
+  filterScroll: { flexGrow: 0, flexShrink: 0, marginTop: 12, marginBottom: 12 },
+  filters: { gap: spacing.sm, paddingHorizontal: spacing.lg, paddingVertical: 6 },
   list: { paddingHorizontal: spacing.lg, paddingBottom: spacing.huge },
   card: {
     backgroundColor: Colors.cardElevated,

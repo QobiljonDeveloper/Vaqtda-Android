@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     marginHorizontal: spacing.lg,
     height: 50,
   },
-  searchInput: { flex: 1, fontSize: 15, color: Colors.text },
+  searchInput: { flex: 1, fontSize: 15, color: Colors.text, outlineStyle: "none" } as any,
   list: { paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: spacing.huge },
   filters: { gap: spacing.xs },
   filterLabel: { marginTop: spacing.sm, marginBottom: spacing.xs },

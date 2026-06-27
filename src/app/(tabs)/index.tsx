@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     height: 50,
   },
-  searchInput: { flex: 1, fontSize: 15, color: Colors.text },
+  searchInput: { flex: 1, fontSize: 15, color: Colors.text, outlineStyle: "none" } as any,
   filterBtn: {
     width: 50,
     height: 50,
