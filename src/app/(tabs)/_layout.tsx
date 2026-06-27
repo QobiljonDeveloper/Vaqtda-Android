@@ -5,14 +5,6 @@ import { Platform } from "react-native";
 import { Colors } from "@/constants/colors";
 import { useLanguage } from "@/context/LanguageContext";
 
-type IconName = keyof typeof Ionicons.glyphMap;
-
-function tabIcon(base: string) {
-  return ({ color, size, focused }: { color: string; size: number; focused: boolean }) => (
-    <Ionicons name={(focused ? base : `${base}-outline`) as IconName} color={color} size={size} />
-  );
-}
-
 export default function TabsLayout() {
   const { t } = useLanguage();
 
@@ -32,10 +24,42 @@ export default function TabsLayout() {
         },
       }}
     >
-      <Tabs.Screen name="index" options={{ title: t("nav.home"), tabBarIcon: tabIcon("home") }} />
-      <Tabs.Screen name="bookings" options={{ title: t("booking.my_bookings"), tabBarIcon: tabIcon("calendar") }} />
-      <Tabs.Screen name="favorites" options={{ title: t("fav.title"), tabBarIcon: tabIcon("heart") }} />
-      <Tabs.Screen name="profile" options={{ title: t("header.dashboard"), tabBarIcon: tabIcon("person") }} />
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: t("nav.home"),
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? "home" : "home-outline"} color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="bookings"
+        options={{
+          title: t("booking.my_bookings"),
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? "calendar" : "calendar-outline"} color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="favorites"
+        options={{
+          title: t("fav.title"),
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? "heart" : "heart-outline"} color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: t("header.dashboard"),
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons name={focused ? "person" : "person-outline"} color={color} size={size} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
