@@ -188,6 +188,9 @@ export default function ProviderScreen() {
     ]);
   };
 
+  // Barqaror referens — aks holda ReviewsSection effect'i cheksiz loop'ga tushadi.
+  const handleAggregate = useCallback((avg: number, count: number) => setLive({ avg, count }), []);
+
   const onShare = useCallback(() => {
     if (!provider) return;
     const name = localize(provider.business_name) || provider.slug;
@@ -372,7 +375,7 @@ export default function ProviderScreen() {
 
         {/* Sharhlar */}
         <Section title="">
-          <ReviewsSection providerId={provider.id} onAggregate={(avg, count) => setLive({ avg, count })} />
+          <ReviewsSection providerId={provider.id} onAggregate={handleAggregate} />
         </Section>
       </ScrollView>
 
