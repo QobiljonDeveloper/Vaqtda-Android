@@ -86,3 +86,27 @@
    DB'da saqlanishi kerak (masalan profiles.expo_push_token ustuni — DB'ga men tegmadim). Hozir:
    in-app ro'yxat + realtime + ilova ochiqligida lokal banner ISHLAYDI.
 - Maxfiy kalitlar (Gemini/Telegram/service_role) mobilga QO'YILMAGAN (xavfsizlik).
+
+## YAKUNIY XULOSA
+**Mobil app web bilan ~100% parity + booking.com sayqal. iOS+Android. tsc toza, `expo export` muvaffaqiyatli.**
+
+Yaratilgan/yangilangan asosiy fayllar:
+- Dizayn: `src/constants/{colors,theme}.ts`, `src/components/ui/*` (18 primitiv)
+- Lib: `src/lib/{format,upload,push,business}.ts`, hooks `src/hooks/{useReviews,useBookings,useRegions,useMyProvider,useDebounce}.ts`
+- Context: `NotificationsContext`, `AuthContext` (register telefon+role)
+- Komponentlar: `ProviderCard` (redesign), `NotificationsBell`, `MapCard`, `Gallery`, `ReviewsSection`
+- Ekranlar: home, search, category/[slug], notifications, contact, settings, forgot-password,
+  login, register, provider/[slug] (redesign), (tabs)/{bookings,favorites,profile},
+  provider/{dashboard,add-business,create-timetable,stats}
+
+### Qanday ishga tushirish
+```
+cd ~/desktop/booking-mobile
+npm install            # (allaqachon o'rnatilgan)
+npx expo start         # QR → Expo Go (yoki: npm run ios / npm run android)
+```
+
+### Web (Booking) — Q2 SEO ✅ LOKAL commit (push qilinmadi — shared repo, sen ko'rib chiqasan)
+- app/{robots,sitemap,manifest}.ts, lib/site.ts, layout metadata, provayder/kategoriya generateMetadata + JSON-LD.
+- Provayder metadata bug tuzatildi (yo'q 'category' ustuni). 
+- Q3 (web bug pass) — review agent natijasi bo'yicha xavfsiz tuzatishlar.
