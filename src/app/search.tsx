@@ -10,6 +10,7 @@ import { Chip, EmptyState, IconButton, SkeletonCard, Text } from "@/components/u
 import { Colors } from "@/constants/colors";
 import { radius, spacing } from "@/constants/theme";
 import { useLanguage } from "@/context/LanguageContext";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useCategories, useProviders, type ProviderRow } from "@/hooks/useProviders";
 import { useRegions } from "@/hooks/useRegions";
 import { formatDistance } from "@/lib/format";
@@ -29,7 +30,8 @@ export default function SearchScreen() {
   const regions = useRegions();
 
   const regionId = mode !== "all" && mode !== "near" ? mode : null;
-  const { providers, loading, refetch } = useProviders(query, categoryId, regionId);
+  const debouncedQuery = useDebounce(query);
+  const { providers, loading, refetch } = useProviders(debouncedQuery, categoryId, regionId);
 
   // Geolokatsiya rejimi
   const [geoItems, setGeoItems] = useState<ProviderRow[]>([]);

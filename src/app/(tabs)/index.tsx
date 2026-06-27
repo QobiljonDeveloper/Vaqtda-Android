@@ -17,6 +17,7 @@ import { Chip, EmptyState, SectionHeader, SkeletonCard, Text } from "@/component
 import { Colors } from "@/constants/colors";
 import { radius, shadow, spacing } from "@/constants/theme";
 import { useLanguage } from "@/context/LanguageContext";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useCategories, useProviders, useTopRated } from "@/hooks/useProviders";
 import { localize } from "@/lib/localize";
 
@@ -26,9 +27,10 @@ export default function HomeScreen() {
   const [search, setSearch] = useState("");
   const [categoryId, setCategoryId] = useState<string | null>(null);
 
+  const debouncedSearch = useDebounce(search);
   const categories = useCategories();
   const topRated = useTopRated();
-  const { providers, loading, error, refetch } = useProviders(search, categoryId);
+  const { providers, loading, error, refetch } = useProviders(debouncedSearch, categoryId);
 
   const isDiscovery = !search.trim() && !categoryId;
 
