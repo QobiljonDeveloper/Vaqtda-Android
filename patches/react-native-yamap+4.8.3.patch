@@ -10,3 +10,360 @@ index d9de295..9541e4c 100644
          mavenCentral()
      }
  }
+diff --git a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/ClusteredYamapViewManager.kt b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/ClusteredYamapViewManager.kt
+index 54d8a0f..6557635 100644
+--- a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/ClusteredYamapViewManager.kt
++++ b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/ClusteredYamapViewManager.kt
+@@ -24,7 +24,7 @@ class ClusteredYamapViewManager internal constructor() : ViewGroupManager<Cluste
+             .build()
+     }
+ 
+-    override fun getExportedCustomBubblingEventTypeConstants(): MutableMap<String, Any>? {
++    override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any>? {
+         return MapBuilder.builder<String, Any>()
+             .put(
+                 "routes",
+@@ -115,48 +115,48 @@ class ClusteredYamapViewManager internal constructor() : ViewGroupManager<Cluste
+             "setCenter" -> setCenter(
+                 castToYaMapView(view),
+                 args!!.getMap(0),
+-                args.getDouble(1).toFloat(),
+-                args.getDouble(2).toFloat(),
+-                args.getDouble(3).toFloat(),
+-                args.getDouble(4).toFloat(),
+-                args.getInt(5)
++                args!!.getDouble(1).toFloat(),
++                args!!.getDouble(2).toFloat(),
++                args!!.getDouble(3).toFloat(),
++                args!!.getDouble(4).toFloat(),
++                args!!.getInt(5)
+             )
+ 
+             "fitAllMarkers" -> fitAllMarkers(view)
+             "fitMarkers" -> if (args != null) {
+-                fitMarkers(view, args.getArray(0))
++                fitMarkers(view, args!!.getArray(0))
+             }
+ 
+             "findRoutes" -> if (args != null) {
+-                findRoutes(view, args.getArray(0), args.getArray(1), args.getString(2))
++                findRoutes(view, args!!.getArray(0), args!!.getArray(1), args!!.getString(2))
+             }
+ 
+             "setZoom" -> if (args != null) {
+                 view.setZoom(
+-                    args.getDouble(0).toFloat(),
+-                    args.getDouble(1).toFloat(),
+-                    args.getInt(2)
++                    args!!.getDouble(0).toFloat(),
++                    args!!.getDouble(1).toFloat(),
++                    args!!.getInt(2)
+                 )
+             }
+ 
+             "getCameraPosition" -> if (args != null) {
+-                view.emitCameraPositionToJS(args.getString(0))
++                view.emitCameraPositionToJS(args!!.getString(0))
+             }
+ 
+             "getVisibleRegion" -> if (args != null) {
+-                view.emitVisibleRegionToJS(args.getString(0))
++                view.emitVisibleRegionToJS(args!!.getString(0))
+             }
+ 
+             "setTrafficVisible" -> if (args != null) {
+-                view.setTrafficVisible(args.getBoolean(0))
++                view.setTrafficVisible(args!!.getBoolean(0))
+             }
+ 
+             "getScreenPoints" -> if (args != null) {
+-                view.emitWorldToScreenPoints(args.getArray(0), args.getString(1))
++                view.emitWorldToScreenPoints(args!!.getArray(0), args!!.getString(1))
+             }
+ 
+             "getWorldPoints" -> if (args != null) {
+-                view.emitScreenToWorldPoints(args.getArray(0), args.getString(1))
++                view.emitScreenToWorldPoints(args!!.getArray(0), args!!.getString(1))
+             }
+ 
+             else -> throw IllegalArgumentException(
+@@ -213,7 +213,7 @@ class ClusteredYamapViewManager internal constructor() : ViewGroupManager<Cluste
+ 
+     private fun fitMarkers(view: View, jsPoints: ReadableArray?) {
+         if (jsPoints != null) {
+-            val points = ArrayList<Point?>()
++            val points = ArrayList<Point>()
+ 
+             for (i in 0 until jsPoints.size()) {
+                 val point = jsPoints.getMap(i)
+@@ -233,7 +233,7 @@ class ClusteredYamapViewManager internal constructor() : ViewGroupManager<Cluste
+         id: String
+     ) {
+         if (jsPoints != null) {
+-            val points = ArrayList<Point?>()
++            val points = ArrayList<Point>()
+             for (i in 0 until jsPoints.size()) {
+                 val point = jsPoints.getMap(i)
+                 if (point != null) {
+@@ -243,7 +243,7 @@ class ClusteredYamapViewManager internal constructor() : ViewGroupManager<Cluste
+             val vehicles = ArrayList<String>()
+             if (jsVehicles != null) {
+                 for (i in 0 until jsVehicles.size()) {
+-                    vehicles.add(jsVehicles.getString(i))
++                    jsVehicles!!.getString(i)?.let { vehicles.add(it) }
+                 }
+             }
+             castToYaMapView(view).findRoutes(points, vehicles, id)
+diff --git a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapCircleManager.kt b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapCircleManager.kt
+index 85be269..01394c7 100644
+--- a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapCircleManager.kt
++++ b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapCircleManager.kt
+@@ -20,7 +20,7 @@ class YamapCircleManager internal constructor() : ViewGroupManager<YamapCircle>(
+             .build()
+     }
+ 
+-    override fun getExportedCustomBubblingEventTypeConstants(): MutableMap<String, Any>? {
++    override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any>? {
+         return MapBuilder.builder<String, Any>()
+             .build()
+     }
+diff --git a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapMarkerManager.kt b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapMarkerManager.kt
+index e32d22c..bb08be4 100644
+--- a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapMarkerManager.kt
++++ b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapMarkerManager.kt
+@@ -23,7 +23,7 @@ class YamapMarkerManager internal constructor() : ViewGroupManager<YamapMarker>(
+             .build()
+     }
+ 
+-    override fun getExportedCustomBubblingEventTypeConstants(): MutableMap<String, Any>? {
++    override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any>? {
+         return MapBuilder.builder<String, Any>()
+             .build()
+     }
+diff --git a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapPolygonManager.kt b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapPolygonManager.kt
+index cf14b19..211e8d3 100644
+--- a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapPolygonManager.kt
++++ b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapPolygonManager.kt
+@@ -21,7 +21,7 @@ class YamapPolygonManager internal constructor() : ViewGroupManager<YamapPolygon
+             .build()
+     }
+ 
+-    override fun getExportedCustomBubblingEventTypeConstants(): MutableMap<String, Any>? {
++    override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any>? {
+         return MapBuilder.builder<String, Any>()
+             .build()
+     }
+diff --git a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapPolylineManager.kt b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapPolylineManager.kt
+index 8be99c8..1ce6a48 100644
+--- a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapPolylineManager.kt
++++ b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapPolylineManager.kt
+@@ -21,7 +21,7 @@ class YamapPolylineManager internal constructor() : ViewGroupManager<YamapPolyli
+             .build()
+     }
+ 
+-    override fun getExportedCustomBubblingEventTypeConstants(): MutableMap<String, Any>? {
++    override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any>? {
+         return MapBuilder.builder<String, Any>()
+             .build()
+     }
+diff --git a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapViewManager.kt b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapViewManager.kt
+index 8b05905..3194f0b 100644
+--- a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapViewManager.kt
++++ b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapViewManager.kt
+@@ -24,7 +24,7 @@ class YamapViewManager internal constructor() : ViewGroupManager<YamapView>() {
+             .build()
+     }
+ 
+-    override fun getExportedCustomBubblingEventTypeConstants(): MutableMap<String, Any>? {
++    override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any>? {
+         return MapBuilder.builder<String, Any>()
+             .put(
+                 "routes",
+@@ -115,48 +115,48 @@ class YamapViewManager internal constructor() : ViewGroupManager<YamapView>() {
+             "setCenter" -> setCenter(
+                 castToYaMapView(view),
+                 args!!.getMap(0),
+-                args.getDouble(1).toFloat(),
+-                args.getDouble(2).toFloat(),
+-                args.getDouble(3).toFloat(),
+-                args.getDouble(4).toFloat(),
+-                args.getInt(5)
++                args!!.getDouble(1).toFloat(),
++                args!!.getDouble(2).toFloat(),
++                args!!.getDouble(3).toFloat(),
++                args!!.getDouble(4).toFloat(),
++                args!!.getInt(5)
+             )
+ 
+             "fitAllMarkers" -> fitAllMarkers(view)
+             "fitMarkers" -> if (args != null) {
+-                fitMarkers(view, args.getArray(0))
++                fitMarkers(view, args!!.getArray(0))
+             }
+ 
+             "findRoutes" -> if (args != null) {
+-                findRoutes(view, args.getArray(0), args.getArray(1), args.getString(2))
++                findRoutes(view, args!!.getArray(0), args!!.getArray(1), args!!.getString(2))
+             }
+ 
+             "setZoom" -> if (args != null) {
+                 view.setZoom(
+-                    args.getDouble(0).toFloat(),
+-                    args.getDouble(1).toFloat(),
+-                    args.getInt(2)
++                    args!!.getDouble(0).toFloat(),
++                    args!!.getDouble(1).toFloat(),
++                    args!!.getInt(2)
+                 )
+             }
+ 
+             "getCameraPosition" -> if (args != null) {
+-                view.emitCameraPositionToJS(args.getString(0))
++                view.emitCameraPositionToJS(args!!.getString(0))
+             }
+ 
+             "getVisibleRegion" -> if (args != null) {
+-                view.emitVisibleRegionToJS(args.getString(0))
++                view.emitVisibleRegionToJS(args!!.getString(0))
+             }
+ 
+             "setTrafficVisible" -> if (args != null) {
+-                view.setTrafficVisible(args.getBoolean(0))
++                view.setTrafficVisible(args!!.getBoolean(0))
+             }
+ 
+             "getScreenPoints" -> if (args != null) {
+-                view.emitWorldToScreenPoints(args.getArray(0), args.getString(1))
++                view.emitWorldToScreenPoints(args!!.getArray(0), args!!.getString(1))
+             }
+ 
+             "getWorldPoints" -> if (args != null) {
+-                view.emitScreenToWorldPoints(args.getArray(0), args.getString(1))
++                view.emitScreenToWorldPoints(args!!.getArray(0), args!!.getString(1))
+             }
+ 
+             else -> throw IllegalArgumentException(
+@@ -204,7 +204,7 @@ class YamapViewManager internal constructor() : ViewGroupManager<YamapView>() {
+ 
+     private fun fitMarkers(view: View, jsPoints: ReadableArray?) {
+         if (jsPoints != null) {
+-            val points = ArrayList<Point?>()
++            val points = ArrayList<Point>()
+ 
+             for (i in 0 until jsPoints.size()) {
+                 val point = jsPoints.getMap(i)
+@@ -224,7 +224,7 @@ class YamapViewManager internal constructor() : ViewGroupManager<YamapView>() {
+         id: String
+     ) {
+         if (jsPoints != null) {
+-            val points = ArrayList<Point?>()
++            val points = ArrayList<Point>()
+ 
+             for (i in 0 until jsPoints.size()) {
+                 val point = jsPoints.getMap(i)
+@@ -237,7 +237,7 @@ class YamapViewManager internal constructor() : ViewGroupManager<YamapView>() {
+ 
+             if (jsVehicles != null) {
+                 for (i in 0 until jsVehicles.size()) {
+-                    vehicles.add(jsVehicles.getString(i))
++                    jsVehicles!!.getString(i)?.let { vehicles.add(it) }
+                 }
+             }
+ 
+diff --git a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/view/YamapView.kt b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/view/YamapView.kt
+index 48c1cdf..a22d250 100644
+--- a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/view/YamapView.kt
++++ b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/view/YamapView.kt
+@@ -266,7 +266,7 @@ open class YamapView(context: Context?) : MapView(context), UserLocationObjectLi
+         setCenter(position, duration, animation)
+     }
+ 
+-    fun findRoutes(points: ArrayList<Point?>, vehicles: ArrayList<String>, id: String?) {
++    fun findRoutes(points: ArrayList<Point>, vehicles: ArrayList<String>, id: String?) {
+         val self = this
+         if (vehicles.size == 1 && vehicles[0] == "car") {
+             val listener: DrivingRouteListener = object : DrivingRouteListener {
+@@ -295,7 +295,7 @@ open class YamapView(context: Context?) : MapView(context), UserLocationObjectLi
+             val _points = ArrayList<RequestPoint>()
+             for (i in points.indices) {
+                 val point = points[i]
+-                val _p = RequestPoint(point!!, RequestPointType.WAYPOINT, null, null)
++                val _p = RequestPoint(point, RequestPointType.WAYPOINT, null, null)
+                 _points.add(_p)
+             }
+ 
+@@ -310,7 +310,7 @@ open class YamapView(context: Context?) : MapView(context), UserLocationObjectLi
+         val _points = ArrayList<RequestPoint>()
+         for (i in points.indices) {
+             val point = points[i]
+-            _points.add(RequestPoint(point!!, RequestPointType.WAYPOINT, null, null))
++            _points.add(RequestPoint(point, RequestPointType.WAYPOINT, null, null))
+         }
+         val listener: Session.RouteListener = object : Session.RouteListener {
+             override fun onMasstransitRoutes(routes: List<Route>) {
+@@ -370,27 +370,27 @@ open class YamapView(context: Context?) : MapView(context), UserLocationObjectLi
+         return points
+     }
+ 
+-    fun calculateBoundingBox(points: ArrayList<Point?>): BoundingBox {
+-        var minLon = points[0]!!.longitude
+-        var maxLon = points[0]!!.longitude
+-        var minLat = points[0]!!.latitude
+-        var maxLat = points[0]!!.latitude
++    fun calculateBoundingBox(points: ArrayList<Point>): BoundingBox {
++        var minLon = points[0].longitude
++        var maxLon = points[0].longitude
++        var minLat = points[0].latitude
++        var maxLat = points[0].latitude
+ 
+         for (i in points.indices) {
+-            if (points[i]!!.longitude > maxLon) {
+-                maxLon = points[i]!!.longitude
++            if (points[i].longitude > maxLon) {
++                maxLon = points[i].longitude
+             }
+ 
+-            if (points[i]!!.longitude < minLon) {
+-                minLon = points[i]!!.longitude
++            if (points[i].longitude < minLon) {
++                minLon = points[i].longitude
+             }
+ 
+-            if (points[i]!!.latitude > maxLat) {
+-                maxLat = points[i]!!.latitude
++            if (points[i].latitude > maxLat) {
++                maxLat = points[i].latitude
+             }
+ 
+-            if (points[i]!!.latitude < minLat) {
+-                minLat = points[i]!!.latitude
++            if (points[i].latitude < minLat) {
++                minLat = points[i].latitude
+             }
+         }
+ 
+@@ -401,13 +401,13 @@ open class YamapView(context: Context?) : MapView(context), UserLocationObjectLi
+         return boundingBox
+     }
+ 
+-    fun fitMarkers(points: ArrayList<Point?>) {
++    fun fitMarkers(points: ArrayList<Point>) {
+         if (points.size == 0) {
+             return
+         }
+         if (points.size == 1) {
+             val center = Point(
+-                points[0]!!.latitude, points[0]!!.longitude
++                points[0].latitude, points[0].longitude
+             )
+             mapWindow.map.move(CameraPosition(center, 15f, 0f, 0f))
+             return
+@@ -791,7 +791,7 @@ open class YamapView(context: Context?) : MapView(context), UserLocationObjectLi
+ 
+     open fun removeChild(index: Int) {
+         if (getChildAt(index) is ReactMapObject) {
+-            val child = getChildAt(index) as ReactMapObject ?: return
++            val child = getChildAt(index) as? ReactMapObject ?: return
+             val mapObject = child.rnMapObject
+             if (mapObject == null || !mapObject.isValid) return
+ 
