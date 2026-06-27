@@ -71,6 +71,14 @@
         {
           "color": "#8FB996"
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "2.3.0"
+          }
+        }
       ]
     ],
     "experiments": {
