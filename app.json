@@ -75,11 +75,10 @@
       [
         "expo-build-properties",
         {
-          "android": {
-            "kotlinVersion": "2.3.0"
-          }
+          "android": {}
         }
-      ]
+      ],
+      "./withLocationDowngrade.js"
     ],
     "experiments": {
       "typedRoutes": true,
