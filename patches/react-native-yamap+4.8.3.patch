@@ -10,8 +10,555 @@ index d9de295..9541e4c 100644
          mavenCentral()
      }
  }
+diff --git a/node_modules/react-native-yamap/android/build/generated/source/buildConfig/release/ru/vvdev/yamap/BuildConfig.java b/node_modules/react-native-yamap/android/build/generated/source/buildConfig/release/ru/vvdev/yamap/BuildConfig.java
+new file mode 100644
+index 0000000..b01bc85
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/generated/source/buildConfig/release/ru/vvdev/yamap/BuildConfig.java
+@@ -0,0 +1,10 @@
++/**
++ * Automatically generated file. DO NOT MODIFY
++ */
++package ru.vvdev.yamap;
++
++public final class BuildConfig {
++  public static final boolean DEBUG = false;
++  public static final String LIBRARY_PACKAGE_NAME = "ru.vvdev.yamap";
++  public static final String BUILD_TYPE = "release";
++}
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/aapt_friendly_merged_manifests/release/processReleaseManifest/aapt/AndroidManifest.xml b/node_modules/react-native-yamap/android/build/intermediates/aapt_friendly_merged_manifests/release/processReleaseManifest/aapt/AndroidManifest.xml
+new file mode 100644
+index 0000000..1acb509
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/aapt_friendly_merged_manifests/release/processReleaseManifest/aapt/AndroidManifest.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="ru.vvdev.yamap" >
++
++    <uses-sdk android:minSdkVersion="26" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/aapt_friendly_merged_manifests/release/processReleaseManifest/aapt/output-metadata.json b/node_modules/react-native-yamap/android/build/intermediates/aapt_friendly_merged_manifests/release/processReleaseManifest/aapt/output-metadata.json
+new file mode 100644
+index 0000000..244fd6a
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/aapt_friendly_merged_manifests/release/processReleaseManifest/aapt/output-metadata.json
+@@ -0,0 +1,18 @@
++{
++  "version": 3,
++  "artifactType": {
++    "type": "AAPT_FRIENDLY_MERGED_MANIFESTS",
++    "kind": "Directory"
++  },
++  "applicationId": "ru.vvdev.yamap",
++  "variantName": "release",
++  "elements": [
++    {
++      "type": "SINGLE",
++      "filters": [],
++      "attributes": [],
++      "outputFile": "AndroidManifest.xml"
++    }
++  ],
++  "elementType": "File"
++}
+\ No newline at end of file
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/aar_metadata/release/writeReleaseAarMetadata/aar-metadata.properties b/node_modules/react-native-yamap/android/build/intermediates/aar_metadata/release/writeReleaseAarMetadata/aar-metadata.properties
+new file mode 100644
+index 0000000..1211b1e
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/aar_metadata/release/writeReleaseAarMetadata/aar-metadata.properties
+@@ -0,0 +1,6 @@
++aarFormatVersion=1.0
++aarMetadataVersion=1.0
++minCompileSdk=1
++minCompileSdkExtension=0
++minAndroidGradlePluginVersion=1.0.0
++coreLibraryDesugaringEnabled=false
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/annotation_processor_list/release/javaPreCompileRelease/annotationProcessors.json b/node_modules/react-native-yamap/android/build/intermediates/annotation_processor_list/release/javaPreCompileRelease/annotationProcessors.json
+new file mode 100644
+index 0000000..9e26dfe
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/annotation_processor_list/release/javaPreCompileRelease/annotationProcessors.json
+@@ -0,0 +1 @@
++{}
+\ No newline at end of file
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar b/node_modules/react-native-yamap/android/build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar
+new file mode 100644
+index 0000000..bcf0699
+Binary files /dev/null and b/node_modules/react-native-yamap/android/build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar differ
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/compile_symbol_list/release/generateReleaseRFile/R.txt b/node_modules/react-native-yamap/android/build/intermediates/compile_symbol_list/release/generateReleaseRFile/R.txt
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/default_proguard_files/global/proguard-android-optimize.txt-8.12.0 b/node_modules/react-native-yamap/android/build/intermediates/default_proguard_files/global/proguard-android-optimize.txt-8.12.0
+new file mode 100644
+index 0000000..5a3e3a5
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/default_proguard_files/global/proguard-android-optimize.txt-8.12.0
+@@ -0,0 +1,89 @@
++# This is a configuration file for ProGuard.
++# http://proguard.sourceforge.net/index.html#manual/usage.html
++#
++# Starting with version 2.2 of the Android plugin for Gradle, this file is distributed together with
++# the plugin and unpacked at build-time. The files in $ANDROID_HOME are no longer maintained and
++# will be ignored by new version of the Android plugin for Gradle.
++
++# Optimizations: If you don't want to optimize, use the proguard-android.txt configuration file
++# instead of this one, which turns off the optimization flags.
++-allowaccessmodification
++
++# Preserve some attributes that may be required for reflection.
++-keepattributes AnnotationDefault,
++                EnclosingMethod,
++                InnerClasses,
++                RuntimeVisibleAnnotations,
++                RuntimeVisibleParameterAnnotations,
++                RuntimeVisibleTypeAnnotations,
++                Signature
++
++-keep public class com.google.vending.licensing.ILicensingService
++-keep public class com.android.vending.licensing.ILicensingService
++-keep public class com.google.android.vending.licensing.ILicensingService
++-dontnote com.android.vending.licensing.ILicensingService
++-dontnote com.google.vending.licensing.ILicensingService
++-dontnote com.google.android.vending.licensing.ILicensingService
++
++# For native methods, see https://www.guardsquare.com/manual/configuration/examples#native
++-keepclasseswithmembernames,includedescriptorclasses class * {
++    native <methods>;
++}
++
++# Keep setters in Views so that animations can still work.
++-keepclassmembers public class * extends android.view.View {
++    void set*(***);
++    *** get*();
++}
++
++# We want to keep methods in Activity that could be used in the XML attribute onClick.
++-keepclassmembers class * extends android.app.Activity {
++    public void *(android.view.View);
++}
++
++# For enumeration classes, see https://www.guardsquare.com/manual/configuration/examples#enumerations
++-keepclassmembers enum * {
++    public static **[] values();
++    public static ** valueOf(java.lang.String);
++}
++
++-keepclassmembers class * implements android.os.Parcelable {
++    public static final ** CREATOR;
++}
++
++# Preserve annotated Javascript interface methods.
++-keepclassmembers class * {
++    @android.webkit.JavascriptInterface <methods>;
++}
++
++# The support libraries contains references to newer platform versions.
++# Don't warn about those in case this app is linking against an older
++# platform version. We know about them, and they are safe.
++-dontnote android.support.**
++-dontnote androidx.**
++-dontwarn android.support.**
++-dontwarn androidx.**
++
++# Understand the @Keep support annotation.
++-keep class android.support.annotation.Keep
++
++-keep @android.support.annotation.Keep class * {*;}
++
++-keepclasseswithmembers class * {
++    @android.support.annotation.Keep <methods>;
++}
++
++-keepclasseswithmembers class * {
++    @android.support.annotation.Keep <fields>;
++}
++
++-keepclasseswithmembers class * {
++    @android.support.annotation.Keep <init>(...);
++}
++
++# These classes are duplicated between android.jar and org.apache.http.legacy.jar.
++-dontnote org.apache.http.**
++-dontnote android.net.http.**
++
++# These classes are duplicated between android.jar and core-lambda-stubs.jar.
++-dontnote java.lang.invoke.**
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/default_proguard_files/global/proguard-android.txt-8.12.0 b/node_modules/react-native-yamap/android/build/intermediates/default_proguard_files/global/proguard-android.txt-8.12.0
+new file mode 100644
+index 0000000..6f7e4ef
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/default_proguard_files/global/proguard-android.txt-8.12.0
+@@ -0,0 +1,95 @@
++# This is a configuration file for ProGuard.
++# http://proguard.sourceforge.net/index.html#manual/usage.html
++#
++# Starting with version 2.2 of the Android plugin for Gradle, this file is distributed together with
++# the plugin and unpacked at build-time. The files in $ANDROID_HOME are no longer maintained and
++# will be ignored by new version of the Android plugin for Gradle.
++
++# Optimization is turned off by default. Dex does not like code run
++# through the ProGuard optimize steps (and performs some
++# of these optimizations on its own).
++# Note that if you want to enable optimization, you cannot just
++# include optimization flags in your own project configuration file;
++# instead you will need to point to the
++# "proguard-android-optimize.txt" file instead of this one from your
++# project.properties file.
++-dontoptimize
++
++# Preserve some attributes that may be required for reflection.
++-keepattributes AnnotationDefault,
++                EnclosingMethod,
++                InnerClasses,
++                RuntimeVisibleAnnotations,
++                RuntimeVisibleParameterAnnotations,
++                RuntimeVisibleTypeAnnotations,
++                Signature
++
++-keep public class com.google.vending.licensing.ILicensingService
++-keep public class com.android.vending.licensing.ILicensingService
++-keep public class com.google.android.vending.licensing.ILicensingService
++-dontnote com.android.vending.licensing.ILicensingService
++-dontnote com.google.vending.licensing.ILicensingService
++-dontnote com.google.android.vending.licensing.ILicensingService
++
++# For native methods, see https://www.guardsquare.com/manual/configuration/examples#native
++-keepclasseswithmembernames,includedescriptorclasses class * {
++    native <methods>;
++}
++
++# Keep setters in Views so that animations can still work.
++-keepclassmembers public class * extends android.view.View {
++    void set*(***);
++    *** get*();
++}
++
++# We want to keep methods in Activity that could be used in the XML attribute onClick.
++-keepclassmembers class * extends android.app.Activity {
++    public void *(android.view.View);
++}
++
++# For enumeration classes, see https://www.guardsquare.com/manual/configuration/examples#enumerations
++-keepclassmembers enum * {
++    public static **[] values();
++    public static ** valueOf(java.lang.String);
++}
++
++-keepclassmembers class * implements android.os.Parcelable {
++    public static final ** CREATOR;
++}
++
++# Preserve annotated Javascript interface methods.
++-keepclassmembers class * {
++    @android.webkit.JavascriptInterface <methods>;
++}
++
++# The support libraries contains references to newer platform versions.
++# Don't warn about those in case this app is linking against an older
++# platform version. We know about them, and they are safe.
++-dontnote android.support.**
++-dontnote androidx.**
++-dontwarn android.support.**
++-dontwarn androidx.**
++
++# Understand the @Keep support annotation.
++-keep class android.support.annotation.Keep
++
++-keep @android.support.annotation.Keep class * {*;}
++
++-keepclasseswithmembers class * {
++    @android.support.annotation.Keep <methods>;
++}
++
++-keepclasseswithmembers class * {
++    @android.support.annotation.Keep <fields>;
++}
++
++-keepclasseswithmembers class * {
++    @android.support.annotation.Keep <init>(...);
++}
++
++# These classes are duplicated between android.jar and org.apache.http.legacy.jar.
++-dontnote org.apache.http.**
++-dontnote android.net.http.**
++
++# These classes are duplicated between android.jar and core-lambda-stubs.jar.
++-dontnote java.lang.invoke.**
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/default_proguard_files/global/proguard-defaults.txt-8.12.0 b/node_modules/react-native-yamap/android/build/intermediates/default_proguard_files/global/proguard-defaults.txt-8.12.0
+new file mode 100644
+index 0000000..7bbb228
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/default_proguard_files/global/proguard-defaults.txt-8.12.0
+@@ -0,0 +1,89 @@
++# This is a configuration file for ProGuard.
++# http://proguard.sourceforge.net/index.html#manual/usage.html
++#
++# Starting with version 2.2 of the Android plugin for Gradle, this file is distributed together with
++# the plugin and unpacked at build-time. The files in $ANDROID_HOME are no longer maintained and
++# will be ignored by new version of the Android plugin for Gradle.
++
++# Optimizations can be turned on and off in the 'postProcessing' DSL block.
++# The configuration below is applied if optimizations are enabled.
++-allowaccessmodification
++
++# Preserve some attributes that may be required for reflection.
++-keepattributes AnnotationDefault,
++                EnclosingMethod,
++                InnerClasses,
++                RuntimeVisibleAnnotations,
++                RuntimeVisibleParameterAnnotations,
++                RuntimeVisibleTypeAnnotations,
++                Signature
++
++-keep public class com.google.vending.licensing.ILicensingService
++-keep public class com.android.vending.licensing.ILicensingService
++-keep public class com.google.android.vending.licensing.ILicensingService
++-dontnote com.android.vending.licensing.ILicensingService
++-dontnote com.google.vending.licensing.ILicensingService
++-dontnote com.google.android.vending.licensing.ILicensingService
++
++# For native methods, see https://www.guardsquare.com/manual/configuration/examples#native
++-keepclasseswithmembernames,includedescriptorclasses class * {
++    native <methods>;
++}
++
++# Keep setters in Views so that animations can still work.
++-keepclassmembers public class * extends android.view.View {
++    void set*(***);
++    *** get*();
++}
++
++# We want to keep methods in Activity that could be used in the XML attribute onClick.
++-keepclassmembers class * extends android.app.Activity {
++    public void *(android.view.View);
++}
++
++# For enumeration classes, see https://www.guardsquare.com/manual/configuration/examples#enumerations
++-keepclassmembers enum * {
++    public static **[] values();
++    public static ** valueOf(java.lang.String);
++}
++
++-keepclassmembers class * implements android.os.Parcelable {
++    public static final ** CREATOR;
++}
++
++# Preserve annotated Javascript interface methods.
++-keepclassmembers class * {
++    @android.webkit.JavascriptInterface <methods>;
++}
++
++# The support libraries contains references to newer platform versions.
++# Don't warn about those in case this app is linking against an older
++# platform version. We know about them, and they are safe.
++-dontnote android.support.**
++-dontnote androidx.**
++-dontwarn android.support.**
++-dontwarn androidx.**
++
++# Understand the @Keep support annotation.
++-keep class android.support.annotation.Keep
++
++-keep @android.support.annotation.Keep class * {*;}
++
++-keepclasseswithmembers class * {
++    @android.support.annotation.Keep <methods>;
++}
++
++-keepclasseswithmembers class * {
++    @android.support.annotation.Keep <fields>;
++}
++
++-keepclasseswithmembers class * {
++    @android.support.annotation.Keep <init>(...);
++}
++
++# These classes are duplicated between android.jar and org.apache.http.legacy.jar.
++-dontnote org.apache.http.**
++-dontnote android.net.http.**
++
++# These classes are duplicated between android.jar and core-lambda-stubs.jar.
++-dontnote java.lang.invoke.**
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/incremental/mergeReleaseAssets/merger.xml b/node_modules/react-native-yamap/android/build/intermediates/incremental/mergeReleaseAssets/merger.xml
+new file mode 100644
+index 0000000..cac84a1
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/incremental/mergeReleaseAssets/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\assets"/></dataSet><dataSet config="release" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\release\assets"/></dataSet><dataSet config="generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\build\intermediates\shader_assets\release\compileReleaseShaders\out"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/incremental/mergeReleaseJniLibFolders/merger.xml b/node_modules/react-native-yamap/android/build/intermediates/incremental/mergeReleaseJniLibFolders/merger.xml
+new file mode 100644
+index 0000000..9a7d7b1
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/incremental/mergeReleaseJniLibFolders/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\jniLibs"/></dataSet><dataSet config="release" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\release\jniLibs"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/incremental/mergeReleaseShaders/merger.xml b/node_modules/react-native-yamap/android/build/intermediates/incremental/mergeReleaseShaders/merger.xml
+new file mode 100644
+index 0000000..fde6554
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/incremental/mergeReleaseShaders/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet config="main" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\shaders"/></dataSet><dataSet config="release" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\release\shaders"/></dataSet></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/incremental/release/packageReleaseResources/compile-file-map.properties b/node_modules/react-native-yamap/android/build/intermediates/incremental/release/packageReleaseResources/compile-file-map.properties
+new file mode 100644
+index 0000000..866e3f7
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/incremental/release/packageReleaseResources/compile-file-map.properties
+@@ -0,0 +1 @@
++#Sun Jun 28 13:29:40 UZT 2026
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/incremental/release/packageReleaseResources/merger.xml b/node_modules/react-native-yamap/android/build/intermediates/incremental/release/packageReleaseResources/merger.xml
+new file mode 100644
+index 0000000..a65b631
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/incremental/release/packageReleaseResources/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="release$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\release\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="release" generated-set="release$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\release\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\build\generated\res\resValues\release"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\build\generated\res\resValues\release"/></dataSet><mergedItems/></merger>
+\ No newline at end of file
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/lint_model_metadata/release/writeReleaseLintModelMetadata/lint-model-metadata.properties b/node_modules/react-native-yamap/android/build/intermediates/lint_model_metadata/release/writeReleaseLintModelMetadata/lint-model-metadata.properties
+new file mode 100644
+index 0000000..02c96e0
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/lint_model_metadata/release/writeReleaseLintModelMetadata/lint-model-metadata.properties
+@@ -0,0 +1,3 @@
++mavenArtifactId=react-native-yamap
++mavenGroupId=Vaqtda
++mavenVersion=unspecified
+\ No newline at end of file
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/local_only_symbol_list/release/parseReleaseLocalResources/R-def.txt b/node_modules/react-native-yamap/android/build/intermediates/local_only_symbol_list/release/parseReleaseLocalResources/R-def.txt
+new file mode 100644
+index 0000000..78ac5b8
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/local_only_symbol_list/release/parseReleaseLocalResources/R-def.txt
+@@ -0,0 +1,2 @@
++R_DEF: Internal format may change without notice
++local
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/manifest_merge_blame_file/release/processReleaseManifest/manifest-merger-blame-release-report.txt b/node_modules/react-native-yamap/android/build/intermediates/manifest_merge_blame_file/release/processReleaseManifest/manifest-merger-blame-release-report.txt
+new file mode 100644
+index 0000000..b7642c0
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/manifest_merge_blame_file/release/processReleaseManifest/manifest-merger-blame-release-report.txt
+@@ -0,0 +1,7 @@
++1<?xml version="1.0" encoding="utf-8"?>
++2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++3    package="ru.vvdev.yamap" >
++4
++5    <uses-sdk android:minSdkVersion="26" />
++6
++7</manifest>
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml b/node_modules/react-native-yamap/android/build/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml
+new file mode 100644
+index 0000000..1acb509
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml
+@@ -0,0 +1,7 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="ru.vvdev.yamap" >
++
++    <uses-sdk android:minSdkVersion="26" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/navigation_json/release/extractDeepLinksRelease/navigation.json b/node_modules/react-native-yamap/android/build/intermediates/navigation_json/release/extractDeepLinksRelease/navigation.json
+new file mode 100644
+index 0000000..0637a08
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/navigation_json/release/extractDeepLinksRelease/navigation.json
+@@ -0,0 +1 @@
++[]
+\ No newline at end of file
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/nested_resources_validation_report/release/generateReleaseResources/nestedResourcesValidationReport.txt b/node_modules/react-native-yamap/android/build/intermediates/nested_resources_validation_report/release/generateReleaseResources/nestedResourcesValidationReport.txt
+new file mode 100644
+index 0000000..08f4ebe
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/nested_resources_validation_report/release/generateReleaseResources/nestedResourcesValidationReport.txt
+@@ -0,0 +1 @@
++0 Warning/Error
+\ No newline at end of file
+diff --git a/node_modules/react-native-yamap/android/build/intermediates/symbol_list_with_package_name/release/generateReleaseRFile/package-aware-r.txt b/node_modules/react-native-yamap/android/build/intermediates/symbol_list_with_package_name/release/generateReleaseRFile/package-aware-r.txt
+new file mode 100644
+index 0000000..6fd4358
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/intermediates/symbol_list_with_package_name/release/generateReleaseRFile/package-aware-r.txt
+@@ -0,0 +1 @@
++ru.vvdev.yamap
+diff --git a/node_modules/react-native-yamap/android/build/kotlin/compileReleaseKotlin/cacheable/dirty-sources.txt b/node_modules/react-native-yamap/android/build/kotlin/compileReleaseKotlin/cacheable/dirty-sources.txt
+new file mode 100644
+index 0000000..95de360
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/kotlin/compileReleaseKotlin/cacheable/dirty-sources.txt
+@@ -0,0 +1,29 @@
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\suggest\RNYandexSuggestPackage.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\YamapPolygonManager.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\RNYamapPackage.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\ClusteredYamapViewManager.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\suggest\MapSuggestItem.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\utils\ImageLoader.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\suggest\YandexSuggestRNArgsHelper.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\search\MapSearchItem.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\YamapViewManager.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\suggest\MapSuggestClient.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\search\YandexMapSearchClient.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\suggest\YandexMapSuggestClient.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\YamapMarkerManager.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\view\YamapPolygon.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\utils\RouteManager.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\view\ClusteredYamapView.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\search\YandexSearchRNArgsHelper.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\search\MapSearchClient.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\view\YamapView.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\search\RNYandexSearchModule.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\suggest\RNYandexSuggestModule.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\view\YamapPolyline.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\YamapCircleManager.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\utils\Callback.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\view\YamapCircle.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\YamapPolylineManager.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\view\YamapMarker.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\models\ReactMapObject.kt
++C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\java\ru\vvdev\yamap\RNYamapModule.kt
+\ No newline at end of file
+diff --git a/node_modules/react-native-yamap/android/build/kotlin/compileReleaseKotlin/local-state/build-history.bin b/node_modules/react-native-yamap/android/build/kotlin/compileReleaseKotlin/local-state/build-history.bin
+new file mode 100644
+index 0000000..9693231
+Binary files /dev/null and b/node_modules/react-native-yamap/android/build/kotlin/compileReleaseKotlin/local-state/build-history.bin differ
+diff --git a/node_modules/react-native-yamap/android/build/outputs/logs/manifest-merger-release-report.txt b/node_modules/react-native-yamap/android/build/outputs/logs/manifest-merger-release-report.txt
+new file mode 100644
+index 0000000..071e5ca
+--- /dev/null
++++ b/node_modules/react-native-yamap/android/build/outputs/logs/manifest-merger-release-report.txt
+@@ -0,0 +1,17 @@
++-- Merging decision tree log ---
++manifest
++ADDED from C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\AndroidManifest.xml:2:1-5:12
++INJECTED from C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\AndroidManifest.xml:2:1-5:12
++	package
++		ADDED from C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\AndroidManifest.xml:3:11-35
++		INJECTED from C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\AndroidManifest.xml
++	xmlns:android
++		ADDED from C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\AndroidManifest.xml:2:11-69
++uses-sdk
++INJECTED from C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\AndroidManifest.xml reason: use-sdk injection requested
++INJECTED from C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\AndroidManifest.xml
++INJECTED from C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\AndroidManifest.xml
++	android:targetSdkVersion
++		INJECTED from C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\AndroidManifest.xml
++	android:minSdkVersion
++		INJECTED from C:\Users\asus\Desktop\booking-mobile\node_modules\react-native-yamap\android\src\main\AndroidManifest.xml
 diff --git a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/ClusteredYamapViewManager.kt b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/ClusteredYamapViewManager.kt
-index 54d8a0f..6557635 100644
+index 54d8a0f..c66b32f 100644
 --- a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/ClusteredYamapViewManager.kt
 +++ b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/ClusteredYamapViewManager.kt
 @@ -24,7 +24,7 @@ class ClusteredYamapViewManager internal constructor() : ViewGroupManager<Cluste
@@ -78,16 +625,26 @@ index 54d8a0f..6557635 100644
  
              "getScreenPoints" -> if (args != null) {
 -                view.emitWorldToScreenPoints(args.getArray(0), args.getString(1))
-+                view.emitWorldToScreenPoints(args!!.getArray(0), args!!.getString(1))
++                view.emitWorldToScreenPoints(args!!.getArray(0)!!, args!!.getString(1))
              }
  
              "getWorldPoints" -> if (args != null) {
 -                view.emitScreenToWorldPoints(args.getArray(0), args.getString(1))
-+                view.emitScreenToWorldPoints(args!!.getArray(0), args!!.getString(1))
++                view.emitScreenToWorldPoints(args!!.getArray(0)!!, args!!.getString(1))
              }
  
              else -> throw IllegalArgumentException(
-@@ -213,7 +213,7 @@ class ClusteredYamapViewManager internal constructor() : ViewGroupManager<Cluste
+@@ -171,7 +171,8 @@ class ClusteredYamapViewManager internal constructor() : ViewGroupManager<Cluste
+ 
+     @ReactProp(name = "clusteredMarkers")
+     fun setClusteredMarkers(view: View, points: ReadableArray) {
+-        castToYaMapView(view).setClusteredMarkers(points.toArrayList())
++        @Suppress("UNCHECKED_CAST")
++        castToYaMapView(view).setClusteredMarkers(points.toArrayList() as ArrayList<Any>)
+     }
+ 
+     @ReactProp(name = "clusterColor")
+@@ -213,7 +214,7 @@ class ClusteredYamapViewManager internal constructor() : ViewGroupManager<Cluste
  
      private fun fitMarkers(view: View, jsPoints: ReadableArray?) {
          if (jsPoints != null) {
@@ -96,8 +653,12 @@ index 54d8a0f..6557635 100644
  
              for (i in 0 until jsPoints.size()) {
                  val point = jsPoints.getMap(i)
-@@ -233,7 +233,7 @@ class ClusteredYamapViewManager internal constructor() : ViewGroupManager<Cluste
-         id: String
+@@ -230,10 +231,10 @@ class ClusteredYamapViewManager internal constructor() : ViewGroupManager<Cluste
+         view: View,
+         jsPoints: ReadableArray?,
+         jsVehicles: ReadableArray?,
+-        id: String
++        id: String?
      ) {
          if (jsPoints != null) {
 -            val points = ArrayList<Point?>()
@@ -105,7 +666,7 @@ index 54d8a0f..6557635 100644
              for (i in 0 until jsPoints.size()) {
                  val point = jsPoints.getMap(i)
                  if (point != null) {
-@@ -243,7 +243,7 @@ class ClusteredYamapViewManager internal constructor() : ViewGroupManager<Cluste
+@@ -243,7 +244,7 @@ class ClusteredYamapViewManager internal constructor() : ViewGroupManager<Cluste
              val vehicles = ArrayList<String>()
              if (jsVehicles != null) {
                  for (i in 0 until jsVehicles.size()) {
@@ -128,7 +689,7 @@ index 85be269..01394c7 100644
              .build()
      }
 diff --git a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapMarkerManager.kt b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapMarkerManager.kt
-index e32d22c..bb08be4 100644
+index e32d22c..ac7cac6 100644
 --- a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapMarkerManager.kt
 +++ b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapMarkerManager.kt
 @@ -23,7 +23,7 @@ class YamapMarkerManager internal constructor() : ViewGroupManager<YamapMarker>(
@@ -140,6 +701,15 @@ index e32d22c..bb08be4 100644
          return MapBuilder.builder<String, Any>()
              .build()
      }
+@@ -107,7 +107,7 @@ class YamapMarkerManager internal constructor() : ViewGroupManager<YamapMarker>(
+     ) {
+         when (commandType) {
+             "animatedMoveTo" -> {
+-                val markerPoint = args!!.getMap(0)
++                val markerPoint = args!!.getMap(0)!!
+                 val moveDuration = args.getInt(1)
+                 val lon = markerPoint.getDouble("lon").toFloat()
+                 val lat = markerPoint.getDouble("lat").toFloat()
 diff --git a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapPolygonManager.kt b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapPolygonManager.kt
 index cf14b19..211e8d3 100644
 --- a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapPolygonManager.kt
@@ -167,7 +737,7 @@ index 8be99c8..1ce6a48 100644
              .build()
      }
 diff --git a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapViewManager.kt b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapViewManager.kt
-index 8b05905..3194f0b 100644
+index 8b05905..c4af510 100644
 --- a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapViewManager.kt
 +++ b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/YamapViewManager.kt
 @@ -24,7 +24,7 @@ class YamapViewManager internal constructor() : ViewGroupManager<YamapView>() {
@@ -234,12 +804,12 @@ index 8b05905..3194f0b 100644
  
              "getScreenPoints" -> if (args != null) {
 -                view.emitWorldToScreenPoints(args.getArray(0), args.getString(1))
-+                view.emitWorldToScreenPoints(args!!.getArray(0), args!!.getString(1))
++                view.emitWorldToScreenPoints(args!!.getArray(0)!!, args!!.getString(1))
              }
  
              "getWorldPoints" -> if (args != null) {
 -                view.emitScreenToWorldPoints(args.getArray(0), args.getString(1))
-+                view.emitScreenToWorldPoints(args!!.getArray(0), args!!.getString(1))
++                view.emitScreenToWorldPoints(args!!.getArray(0)!!, args!!.getString(1))
              }
  
              else -> throw IllegalArgumentException(
@@ -252,8 +822,12 @@ index 8b05905..3194f0b 100644
  
              for (i in 0 until jsPoints.size()) {
                  val point = jsPoints.getMap(i)
-@@ -224,7 +224,7 @@ class YamapViewManager internal constructor() : ViewGroupManager<YamapView>() {
-         id: String
+@@ -221,10 +221,10 @@ class YamapViewManager internal constructor() : ViewGroupManager<YamapView>() {
+         view: View,
+         jsPoints: ReadableArray?,
+         jsVehicles: ReadableArray?,
+-        id: String
++        id: String?
      ) {
          if (jsPoints != null) {
 -            val points = ArrayList<Point?>()
@@ -270,10 +844,41 @@ index 8b05905..3194f0b 100644
                  }
              }
  
+diff --git a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/view/ClusteredYamapView.kt b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/view/ClusteredYamapView.kt
+index c01f591..edf7650 100644
+--- a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/view/ClusteredYamapView.kt
++++ b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/view/ClusteredYamapView.kt
+@@ -93,7 +93,7 @@ class ClusteredYamapView(context: Context?) : YamapView(context), ClusterListene
+     }
+ 
+     override fun onClusterTap(cluster: Cluster): Boolean {
+-        val points = ArrayList<Point?>()
++        val points = ArrayList<Point>()
+         for (placemark in cluster.placemarks) {
+             points.add(placemark.geometry)
+         }
 diff --git a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/view/YamapView.kt b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/view/YamapView.kt
-index 48c1cdf..a22d250 100644
+index 48c1cdf..8847778 100644
 --- a/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/view/YamapView.kt
 +++ b/node_modules/react-native-yamap/android/src/main/java/ru/vvdev/yamap/view/YamapView.kt
+@@ -225,7 +225,7 @@ open class YamapView(context: Context?) : MapView(context), UserLocationObjectLi
+         val screenPoints = Arguments.createArray()
+ 
+         for (i in 0 until worldPoints.size()) {
+-            val p = worldPoints.getMap(i)
++            val p = worldPoints.getMap(i)!!
+             val worldPoint = Point(p.getDouble("lat"), p.getDouble("lon"))
+             val screenPoint = mapWindow.worldToScreen(worldPoint)
+             screenPoints.pushMap(screenPointToJSON(screenPoint))
+@@ -244,7 +244,7 @@ open class YamapView(context: Context?) : MapView(context), UserLocationObjectLi
+         val worldPoints = Arguments.createArray()
+ 
+         for (i in 0 until screenPoints.size()) {
+-            val p = screenPoints.getMap(i)
++            val p = screenPoints.getMap(i)!!
+             val screenPoint = ScreenPoint(p.getDouble("x").toFloat(), p.getDouble("y").toFloat())
+             val worldPoint = mapWindow.screenToWorld(screenPoint)
+             worldPoints.pushMap(worldPointToJSON(worldPoint))
 @@ -266,7 +266,7 @@ open class YamapView(context: Context?) : MapView(context), UserLocationObjectLi
          setCenter(position, duration, animation)
      }
@@ -301,6 +906,20 @@ index 48c1cdf..a22d250 100644
          }
          val listener: Session.RouteListener = object : Session.RouteListener {
              override fun onMasstransitRoutes(routes: List<Route>) {
+@@ -350,11 +350,11 @@ open class YamapView(context: Context?) : MapView(context), UserLocationObjectLi
+     }
+ 
+     fun fitAllMarkers() {
+-        val points = ArrayList<Point?>()
++        val points = ArrayList<Point>()
+         for (i in 0 until childCount) {
+             val obj: Any = getChildAt(i)
+             if (obj is YamapMarker) {
+-                points.add(obj.point)
++                obj.point?.let { points.add(it) }
+             }
+         }
+         fitMarkers(points)
 @@ -370,27 +370,27 @@ open class YamapView(context: Context?) : MapView(context), UserLocationObjectLi
          return points
      }
@@ -358,6 +977,15 @@ index 48c1cdf..a22d250 100644
              )
              mapWindow.map.move(CameraPosition(center, 15f, 0f, 0f))
              return
+@@ -685,7 +685,7 @@ open class YamapView(context: Context?) : MapView(context), UserLocationObjectLi
+         val wTransports = Arguments.createMap()
+ 
+         for ((key, value) in transports) {
+-            wTransports.putArray(key, Arguments.fromList(value))
++            wTransports.putArray(key, Arguments.fromList(value ?: ArrayList<String?>()))
+         }
+ 
+         routeMetadata.putMap("transports", wTransports)
 @@ -791,7 +791,7 @@ open class YamapView(context: Context?) : MapView(context), UserLocationObjectLi
  
      open fun removeChild(index: Int) {
