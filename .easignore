@@ -1,0 +1,43 @@
+# EAS build upload ignore list.
+# Mirrors .gitignore, but intentionally does NOT ignore `.env` so that the
+# EXPO_PUBLIC_* keys (Supabase, Gemini AI search, Yandex, Telegram) are bundled
+# into the cloud build. `.env` stays gitignored — it is only uploaded to EAS.
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# typescript
+*.tsbuildinfo
+
+example
+
+# generated native folders
+/ios
+/android

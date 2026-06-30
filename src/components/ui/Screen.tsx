@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import { SafeAreaView, type Edge } from "react-native-safe-area-context";
 
-import { Colors } from "@/constants/colors";
+import { type ColorPalette } from "@/constants/colors";
 import { spacing } from "@/constants/theme";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 
 interface ScreenProps {
   children: ReactNode;
@@ -38,10 +39,12 @@ export function Screen({
   refreshing,
   onRefresh,
   keyboard = false,
-  background = Colors.background,
+  background,
   style,
   contentContainerStyle,
 }: ScreenProps) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const pad = padded ? { paddingHorizontal: spacing.lg } : null;
 
   const body = scroll ? (
@@ -68,7 +71,7 @@ export function Screen({
   );
 
   return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: background }, style]} edges={edges}>
+    <SafeAreaView style={[styles.safe, { backgroundColor: background ?? Colors.background }, style]} edges={edges}>
       {keyboard ? (
         <KeyboardAvoidingView
           style={styles.flex}
@@ -83,7 +86,7 @@ export function Screen({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   safe: { flex: 1 },
   flex: { flex: 1 },
   scrollContent: { paddingBottom: spacing.huge },

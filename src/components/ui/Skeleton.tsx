@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { Animated, type DimensionValue, StyleSheet, type ViewStyle } from "react-native";
 
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 
 interface SkeletonProps {
   width?: DimensionValue;
@@ -11,6 +12,7 @@ interface SkeletonProps {
 }
 
 export function Skeleton({ width = "100%", height = 14, radius = 8, style }: SkeletonProps) {
+  const Colors = useColors();
   const opacity = useRef(new Animated.Value(0.4)).current;
 
   useEffect(() => {
@@ -35,6 +37,7 @@ export function Skeleton({ width = "100%", height = 14, radius = 8, style }: Ske
 }
 
 export function SkeletonCard() {
+  const styles = useThemedStyles(makeStyles);
   return (
     <Animated.View style={styles.card}>
       <Skeleton width={60} height={60} radius={12} />
@@ -47,7 +50,7 @@ export function SkeletonCard() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   card: {
     flexDirection: "row",
     gap: 12,

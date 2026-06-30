@@ -1,8 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { spacing } from "@/constants/theme";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 import { Text } from "@/components/ui/Text";
 
 interface SectionHeaderProps {
@@ -12,6 +13,8 @@ interface SectionHeaderProps {
 }
 
 export function SectionHeader({ title, actionLabel, onAction }: SectionHeaderProps) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.row}>
       <Text variant="title">{title}</Text>
@@ -27,7 +30,7 @@ export function SectionHeader({ title, actionLabel, onAction }: SectionHeaderPro
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",

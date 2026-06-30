@@ -3,8 +3,9 @@ import { Linking, Platform, Pressable, StyleSheet, View } from "react-native";
 import { WebView } from "react-native-webview";
 
 import { Text } from "@/components/ui/Text";
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { radius, spacing } from "@/constants/theme";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 
 interface MapCardProps {
   location: string | null; // "lat,lng"
@@ -22,6 +23,8 @@ function parse(loc: string | null): { lat: number; lng: number } | null {
 const KEY = process.env.EXPO_PUBLIC_YANDEX_MAPS_KEY ?? "";
 
 export function MapCard({ location, label, title }: MapCardProps) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const coords = parse(location);
   if (!coords) return null;
 
@@ -79,7 +82,7 @@ export function MapCard({ location, label, title }: MapCardProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   wrap: { gap: spacing.sm },
   mapBox: {
     height: 170,

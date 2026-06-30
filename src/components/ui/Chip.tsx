@@ -1,8 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, Text } from "react-native";
 
-import { Colors } from "@/constants/colors";
-import { fontSize, fontWeight, radius, spacing } from "@/constants/theme";
+import { Colors, type ColorPalette } from "@/constants/colors";
+import { fontFamily, fontSize, fontWeight, radius, shadow, spacing } from "@/constants/theme";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 
 interface ChipProps {
   label: string;
@@ -14,6 +15,8 @@ interface ChipProps {
 
 /** Tanlanadigan pill (kategoriya, sana, davomiylik, filtrlar). */
 export function Chip({ label, active = false, onPress, icon, size = "md" }: ChipProps) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const h = size === "sm" ? 34 : 40;
   return (
     <Pressable
@@ -45,7 +48,7 @@ export function Chip({ label, active = false, onPress, icon, size = "md" }: Chip
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   chip: {
     flexDirection: "row",
     alignItems: "center",
@@ -54,10 +57,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     borderWidth: 1.5,
   },
-  active: { backgroundColor: Colors.primary, borderColor: Colors.primary },
-  inactive: { backgroundColor: Colors.white, borderColor: Colors.border },
-  pressed: { opacity: 0.85 },
-  text: { fontWeight: fontWeight.semibold },
+  active: { backgroundColor: Colors.primary, borderColor: Colors.primary, ...shadow.sm },
+  inactive: { backgroundColor: Colors.cardElevated, borderColor: Colors.border },
+  pressed: { opacity: 0.9, transform: [{ scale: 0.96 }] },
+  text: { fontWeight: fontWeight.semibold, fontFamily: fontFamily.semibold },
   textActive: { color: Colors.primaryForeground },
   textInactive: { color: Colors.textMuted },
 });

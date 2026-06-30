@@ -4,13 +4,15 @@ import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button, EmptyState, IconButton, Text } from "@/components/ui";
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { radius, shadow, spacing } from "@/constants/theme";
 import { useAuth } from "@/context/AuthContext";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useNotifications, type AppNotification } from "@/context/NotificationsContext";
 import { formatDate } from "@/lib/format";
 import { localize } from "@/lib/localize";
+import { routeForNotification } from "@/lib/push";
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -28,6 +30,8 @@ function iconFor(type: string | null): { name: IconName; bg: string; fg: string 
 }
 
 export default function NotificationsScreen() {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { t, lang } = useLanguage();
   const { isAuthenticated } = useAuth();
@@ -36,8 +40,11 @@ export default function NotificationsScreen() {
 
   const onPressItem = (n: AppNotification) => {
     if (!n.is_read) markRead(n.id);
-    const slug = n.data?.slug;
-    if (slug) router.push(`/provider/${slug}`);
+    // Web NotificationsBell handleClick bilan bir xil deep-link:
+    //   waitlist_slot_open + slug + date -> /provider/<slug>?date=YYYY-MM-DD
+    //   (o'sha kun avtoselect bo'ladi), aks holda /provider/<slug>.
+    const route = routeForNotification(n.type, n.data);
+    if (route) router.push(route as never);
   };
 
   return (
@@ -129,7 +136,7 @@ export default function NotificationsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   flex: { flex: 1 },
   header: {

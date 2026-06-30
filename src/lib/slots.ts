@@ -87,11 +87,22 @@ function generateStartTimes(
   return [...new Set(times)].sort((a, b) => timeToMin(a) - timeToMin(b));
 }
 
-// Tanlangan sana + davomiylik uchun bo'sh boshlanish vaqtlari.
-// nowDate/nowHHMM — Toshkent vaqti (o'tib ketgan vaqtlarni chiqarib tashlash uchun).
+// Tanlangan sana uchun bo'sh boshlanish vaqtlari.
+//
+// Web `useProviderBooking.startTimes` semantikasini AYNAN takrorlaydi:
+//   - Qadam (step) = minDuration (eng kichik mumkin bo'lgan davomiylik) — shu
+//     sabab har bir potensial slot boshlanishi ko'rsatiladi (oldin xato bo'lib
+//     `Math.max(15, Math.min(duration, 30))` ishlatilardi va granularlik
+//     web'dan farq qilardi).
+//   - Vaqt bo'sh deb hisoblanadi, agarda `candidateDurations` ichidan KAMIDA
+//     bittasi shu vaqtda joylasha olsa (web: fixed -> barcha fixed_durations,
+//     flexible -> [flexible_min]).
+//   - Bugun bo'lsa, o'tib ketgan vaqtlar yashiriladi.
+// nowDate/nowHHMM — Toshkent vaqti.
 export function freeStartTimes(
   date: string,
-  duration: number,
+  step: number,
+  candidateDurations: number[],
   buffer: number,
   workSlots: WorkSlot[],
   breaks: BreakSlot[],
@@ -99,11 +110,14 @@ export function freeStartTimes(
   nowDate: string,
   nowHHMM: string
 ): string[] {
-  const step = Math.max(15, Math.min(duration, 30));
-  return generateStartTimes(workSlots, date, step).filter((time) => {
-    if (date === nowDate && timeToMin(time) <= timeToMin(nowHHMM)) return false;
-    return isSlotFree(time, duration, buffer, workSlots, breaks, bookings, date);
-  });
+  const durs = candidateDurations.length > 0 ? candidateDurations : [step];
+  return generateStartTimes(workSlots, date, Math.max(1, step))
+    .filter((time) => date !== nowDate || timeToMin(time) > timeToMin(nowHHMM))
+    .filter((time) =>
+      durs.some((d) =>
+        isSlotFree(time, d, buffer, workSlots, breaks, bookings, date)
+      )
+    );
 }
 
 // Slotlardan mavjud (kelajak) sanalar ro'yxati.

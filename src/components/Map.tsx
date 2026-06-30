@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Platform, StyleSheet, View, type ViewStyle } from "react-native";
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
+import { useThemedStyles } from "@/context/ThemeContext";
 
 export interface MapProps {
   latitude: number;
@@ -11,6 +12,7 @@ export interface MapProps {
 }
 
 export function Map({ latitude, longitude, zoom = 15, markerTitle, style }: MapProps) {
+  const styles = useThemedStyles(makeStyles);
   const isWeb = Platform.OS === "web";
 
   const mapContent = useMemo(() => {
@@ -61,7 +63,7 @@ export function Map({ latitude, longitude, zoom = 15, markerTitle, style }: MapP
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   container: {
     // Premium Midnight Slate (Soft Dark) fon va border o'rniga padding
     backgroundColor: "#1B1E28", 

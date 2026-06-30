@@ -2,8 +2,9 @@ import type { ReactNode } from "react";
 import { Modal, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { radius, spacing } from "@/constants/theme";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 import { IconButton } from "@/components/ui/IconButton";
 import { Text } from "@/components/ui/Text";
 
@@ -17,6 +18,8 @@ interface SheetProps {
 
 /** Pastdan chiquvchi modal — tasdiqlash, tanlovlar, formalar uchun. */
 export function Sheet({ visible, onClose, title, children, scroll = false }: SheetProps) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const insets = useSafeAreaInsets();
 
   return (
@@ -53,7 +56,7 @@ export function Sheet({ visible, onClose, title, children, scroll = false }: She
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   root: { flex: 1, justifyContent: "flex-end" },
   backdrop: {
     position: "absolute",

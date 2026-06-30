@@ -4,8 +4,9 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Chip, EmptyState, IconButton, Text } from "@/components/ui";
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { radius, shadow, spacing } from "@/constants/theme";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMyProvider } from "@/hooks/useMyProvider";
 import { formatPrice } from "@/lib/format";
@@ -27,6 +28,8 @@ const WD = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", 
 const WD_SHORT = ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"];
 
 export default function StatsScreen() {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const { t, lang } = useLanguage();
   const router = useRouter();
   const { provider } = useMyProvider();
@@ -135,7 +138,7 @@ export default function StatsScreen() {
 function StatCard({
   label,
   value,
-  tone = Colors.text,
+  tone,
   wide = false,
 }: {
   label: string;
@@ -144,19 +147,21 @@ function StatCard({
   icon?: boolean;
   wide?: boolean;
 }) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={[styles.card, wide && styles.cardWide]}>
       <Text variant="caption" muted>
         {label}
       </Text>
-      <Text variant="h2" color={tone} numberOfLines={1}>
+      <Text variant="h2" color={tone ?? Colors.text} numberOfLines={1}>
         {value}
       </Text>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   header: {
     flexDirection: "row",

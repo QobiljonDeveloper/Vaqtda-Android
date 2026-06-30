@@ -3,12 +3,15 @@ import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { Text } from "@/components/ui/Text";
-import { Colors } from "@/constants/colors";
+import { type ColorPalette } from "@/constants/colors";
 import { HIT_SLOP } from "@/constants/theme";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/context/NotificationsContext";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 
-export function NotificationsBell({ color = Colors.text }: { color?: string }) {
+export function NotificationsBell({ color }: { color?: string }) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const { unreadCount } = useNotifications();
@@ -19,7 +22,7 @@ export function NotificationsBell({ color = Colors.text }: { color?: string }) {
       onPress={() => router.push(isAuthenticated ? "/notifications" : "/login")}
       style={styles.wrap}
     >
-      <Ionicons name="notifications-outline" size={24} color={color} />
+      <Ionicons name="notifications-outline" size={24} color={color ?? Colors.text} />
       {isAuthenticated && unreadCount > 0 && (
         <View style={styles.badge}>
           <Text style={styles.badgeText}>{unreadCount > 9 ? "9+" : String(unreadCount)}</Text>
@@ -29,7 +32,7 @@ export function NotificationsBell({ color = Colors.text }: { color?: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   wrap: { padding: 2 },
   badge: {
     position: "absolute",

@@ -9,10 +9,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/colors";
+import { Text } from "@/components/ui/Text";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { useAuth } from "@/context/AuthContext";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useWaitlist } from "@/hooks/useWaitlist";
 
@@ -42,6 +44,8 @@ export function WaitlistJoinCard({
   freeDays?: FreeDay[];
   onPickDate?: (date: string) => void;
 }) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { t } = useLanguage();
   const { isAuthenticated } = useAuth();
@@ -192,6 +196,8 @@ function ModeBtn({
   label: string;
   onPress: () => void;
 }) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <Pressable style={[styles.modeBtn, active && styles.modeBtnActive]} onPress={onPress}>
       <Ionicons name={icon} size={16} color={active ? Colors.primaryForeground : Colors.primaryDark} />
@@ -200,7 +206,7 @@ function ModeBtn({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   card: {
     borderWidth: 1,
     borderColor: Colors.primary,

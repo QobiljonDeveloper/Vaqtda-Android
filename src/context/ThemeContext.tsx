@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { useColorScheme, Platform } from "react-native";
-import { Colors } from "@/constants/colors";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useColorScheme, StyleSheet } from "react-native";
+import { Colors, lightColors, darkColors, type ColorPalette } from "@/constants/colors";
 
 export type ThemeMode = "light" | "dark" | "system";
 
@@ -9,6 +9,7 @@ interface ThemeContextType {
   mode: ThemeMode;
   setMode: (mode: ThemeMode) => void;
   isDark: boolean;
+  colors: ColorPalette;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -27,34 +28,21 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const setMode = useCallback((newMode: ThemeMode) => {
     setModeState(newMode);
-    AsyncStorage.setItem("theme_mode", newMode).then(() => {
-      // Tizim ranglarini darhol o'zgartiramiz
-      updateGlobalColors(newMode === "system" ? (systemColorScheme === "dark" ? "dark" : "light") : newMode);
-      
-      // Veb-brauzerda o'zgarishlarni darhol qo'llash uchun sahifani yangilaymiz:
-      if (Platform.OS === "web") {
-        window.location.reload();
-      } else {
-        // Mobil qurilmalarda darhol ishlashi uchun NativeModules orqali reload yoki alert
-        const { NativeModules } = require("react-native");
-        if (NativeModules.DevSettings) {
-          NativeModules.DevSettings.reload();
-        }
-      }
-    });
-  }, [systemColorScheme]);
+    AsyncStorage.setItem("theme_mode", newMode).catch(() => {});
+  }, []);
 
   const isDark = mode === "system" ? systemColorScheme === "dark" : mode === "dark";
 
-  useEffect(() => {
-    updateGlobalColors(isDark ? "dark" : "light");
-  }, [isDark]);
+  const colors = isDark ? darkColors : lightColors;
 
-  return (
-    <ThemeContext.Provider value={{ mode, setMode, isDark }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  // Komponent bo'lmagan eski kodlar global `Colors`'ni o'qiydi — uni sinxron tutamiz.
+  useEffect(() => {
+    Object.assign(Colors, colors);
+  }, [colors]);
+
+  const value = useMemo(() => ({ mode, setMode, isDark, colors }), [mode, setMode, isDark, colors]);
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export function useThemeMode() {
@@ -63,72 +51,22 @@ export function useThemeMode() {
   return ctx;
 }
 
-// Global Colors update helper (for inline styles and new renders)
-function updateGlobalColors(theme: "light" | "dark") {
-  const lightColors = {
-    primary: "#83a383",
-    primaryDark: "#678867",
-    primaryDarker: "#4D694D",
-    primaryForeground: "#FFFFFF",
-    primarySoft: "rgba(131, 163, 131, 0.15)",
-    primaryTint: "rgba(131, 163, 131, 0.08)",
-    background: "#FFFFFF",
-    backgroundAlt: "#F4F4F5",
-    card: "#F4F4F5",
-    cardElevated: "#FFFFFF",
-    border: "#E4E4E7",
-    borderStrong: "#D4D4D8",
-    text: "#18181B",
-    textMuted: "#71717A",
-    textSubtle: "#A1A1AA",
-    star: "#F5B301",
-    danger: "#EF4444",
-    dangerSoft: "rgba(239, 68, 68, 0.15)",
-    success: "#10B981",
-    successSoft: "rgba(16, 185, 129, 0.15)",
-    warning: "#F59E0B",
-    warningSoft: "rgba(245, 158, 11, 0.15)",
-    info: "#3B82F6",
-    infoSoft: "rgba(59, 130, 246, 0.15)",
-    white: "#FFFFFF",
-    black: "#000000",
-    overlay: "rgba(0, 0, 0, 0.4)",
-    skeleton: "#E4E4E7",
-    shadowColor: "#000000",
-  };
+/** Joriy tema ranglarini qaytaradi. Tema o'zgarganda komponent qayta render bo'ladi. */
+export function useColors(): ColorPalette {
+  return useThemeMode().colors;
+}
 
-  const darkColors = {
-    primary: "#83a383",
-    primaryDark: "#678867",
-    primaryDarker: "#4D694D",
-    primaryForeground: "#18181B",
-    primarySoft: "rgba(131, 163, 131, 0.15)",
-    primaryTint: "rgba(131, 163, 131, 0.08)",
-    background: "#18181B",
-    backgroundAlt: "#18181B",
-    card: "#27272A",
-    cardElevated: "#27272A",
-    border: "#3F3F46",
-    borderStrong: "#52525B",
-    text: "#F4F4F5",
-    textMuted: "#A1A1AA",
-    textSubtle: "#71717A",
-    star: "#F5B301",
-    danger: "#EF4444",
-    dangerSoft: "rgba(239, 68, 68, 0.15)",
-    success: "#10B981",
-    successSoft: "rgba(16, 185, 129, 0.15)",
-    warning: "#F59E0B",
-    warningSoft: "rgba(245, 158, 11, 0.15)",
-    info: "#3B82F6",
-    infoSoft: "rgba(59, 130, 246, 0.15)",
-    white: "#FFFFFF",
-    black: "#000000",
-    overlay: "rgba(0, 0, 0, 0.65)",
-    skeleton: "#27272A",
-    shadowColor: "#000000",
-  };
-
-  const activeColors = theme === "dark" ? darkColors : lightColors;
-  Object.assign(Colors, activeColors);
+/**
+ * Tema-mos stillar yaratadi. `factory` — ranglarni qabul qilib StyleSheet qaytaradigan funksiya.
+ * Tema o'zgarganda stillar avtomatik qayta hisoblanadi.
+ *
+ * Misol:
+ *   const styles = useThemedStyles(makeStyles);
+ *   const makeStyles = (Colors: ColorPalette) => StyleSheet.create({ ... });
+ */
+export function useThemedStyles<T extends StyleSheet.NamedStyles<T>>(
+  factory: (colors: ColorPalette) => T
+): T {
+  const colors = useColors();
+  return useMemo(() => factory(colors), [colors, factory]);
 }

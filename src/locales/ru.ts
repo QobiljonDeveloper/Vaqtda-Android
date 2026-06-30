@@ -198,6 +198,11 @@ export const ru: Record<TKey, string> = {
   "booking.conflict": "Время занято",
   "booking.conflict_desc": "Это время уже забронировано другим пользователем. Пожалуйста, выберите другое время.",
   "booking.ok": "Понятно",
+  "booking.next_in": "Следующая",
+  "booking.cancel_window_note": "Отменить нельзя менее чем за 24 часа до начала",
+  "booking.past_time_desc": "Это время уже прошло. Пожалуйста, выберите другое время.",
+  "booking.just_taken_desc": "К сожалению, это время только что заняли. Выберите другое.",
+  "booking.duration_too_long": "Выбранная длительность не помещается в рабочее время",
   "booking.stay": "Остаться",
   "booking.my_bookings": "Мои брони",
   "common.saving": "Сохранение...",
@@ -461,6 +466,8 @@ export const ru: Record<TKey, string> = {
   "search.location_denied": "Доступ к геолокации запрещён",
   "search.distance_km": "в {km} км",
   "search.distance_m": "в {m} м",
+  "search.ai_searching": "Умный поиск...",
+  "search.ai_corrected": "Результаты по «{corrected}» (запрос: «{raw}»)",
 
   // ── Поделиться ──
   "share.message": "{name} — забронируйте на Vaqtda.uz",
@@ -522,4 +529,54 @@ export const ru: Record<TKey, string> = {
   "home.all_providers": "Все провайдеры",
   "home.results": "{n} результатов",
   "home.greeting": "Добро пожаловать 👋",
+
+  // ── Бизнес-профиль (add-business) — Wave 2 ──
+  "ab.images": "Изображения бизнеса",
+  "ab.images_hint": "Загрузите хотя бы одно изображение. Отметьте одно как основное.",
+  "ab.need_image": "Пожалуйста, загрузите хотя бы одно изображение.",
+  "ab.add_images": "Добавить фото",
+  "ab.set_primary": "Сделать основным",
+  "ab.set_location": "Указать местоположение",
+  "ab.change_location": "Изменить местоположение",
+  "ab.use_current": "Использовать текущее местоположение",
+  "ab.tap_to_set": "Нажмите на карту, чтобы указать место",
+  "ab.latitude": "Широта (lat)",
+  "ab.longitude": "Долгота (lng)",
+
+  // ── Auth (Wave 2) ──
+  "auth.email_not_verified": "Email не подтверждён. Перейдите по ссылке из письма.",
+  "auth.invalid_credentials": "Неверный email или пароль",
+  "auth.registered_success": "Регистрация успешна! Подтвердите email и войдите.",
+  "auth.optional": "необязательно",
+  "auth.terms": "Условия использования",
+  "auth.privacy": "Политика конфиденциальности",
+
+  // ── Платежи (Wave 2) ──
+  "pay.demo_card": "Демо-карта",
+  "pay.coming_soon": "Скоро будет доступно",
+  "pay.demo_note": "Это демонстрационный экран. Интеграция оплаты скоро.",
+
+  // ── Дашборд провайдера (Wave 2) ──
+  "pdash.today_count": "Сегодня",
+  "pdash.upcoming_count": "Предстоящие",
+  "pdash.day_schedule": "Расписание дня",
+  "pdash.free_day": "Свободный день",
+  "pdash.free_day_desc": "На этот день нет записей",
+
+  // ── Контакт (Wave 2) ──
+  "contact.fallback_email": "Не удалось отправить. Связаться по email?",
+
+  // ── Адаптация экранов Stitch ──
+  "auth.brand_name": "Vaqtda",
+  "auth.login_welcome": "Добро пожаловать! Войдите, чтобы продолжить",
+  "auth.email_label": "Электронная почта",
+  "auth.password_label": "Пароль",
+  "auth.role_question": "Кем вы регистрируетесь?",
+  "tt.header_caption": "Укажите конкретные даты — клиенты видят только выбранные вами дни.",
+  "tt.stat_marked": "Отмеченные дни",
+  "tt.unit_days": "дн.",
+  "tt.tab_settings": "Настройки",
+  "tt.active": "Активно",
+  "pdash.free_slot": "Свободно",
+  "pdash.unit_bookings": "броней",
 };

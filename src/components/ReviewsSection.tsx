@@ -4,9 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { Alert, Pressable, StyleSheet, View } from "react-native";
 
 import { Avatar, Button, Chip, Input, Sheet, Stars, Text } from "@/components/ui";
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { radius, spacing } from "@/constants/theme";
 import { useAuth } from "@/context/AuthContext";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useReviews, type Review, type ReviewSort } from "@/hooks/useReviews";
 import { formatDate } from "@/lib/format";
@@ -17,12 +18,18 @@ interface Props {
 }
 
 export function ReviewsSection({ providerId, onAggregate }: Props) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const { t, lang } = useLanguage();
   const { user, isAuthenticated } = useAuth();
   const router = useRouter();
-  const { reviews, avg, count, submit, remove, report } = useReviews(providerId);
+  const { reviews, avg, count, distribution, canReview, submit, remove, report } = useReviews(
+    providerId,
+    user?.id
+  );
 
   const [sort, setSort] = useState<ReviewSort>("newest");
+  const [filterStar, setFilterStar] = useState<number | null>(null);
   const [myRating, setMyRating] = useState(0);
   const [myComment, setMyComment] = useState("");
   const [saving, setSaving] = useState(false);
@@ -46,12 +53,13 @@ export function ReviewsSection({ providerId, onAggregate }: Props) {
   }, [existing]);
 
   const sorted = useMemo(() => {
-    const arr = [...reviews];
+    let arr = [...reviews];
+    if (filterStar !== null) arr = arr.filter((r) => Math.round(r.rating) === filterStar);
     if (sort === "highest") arr.sort((a, b) => b.rating - a.rating);
     else if (sort === "lowest") arr.sort((a, b) => a.rating - b.rating);
     // newest = allaqachon created_at desc (hook tartibi)
     return arr;
-  }, [reviews, sort]);
+  }, [reviews, sort, filterStar]);
 
   const onSubmit = async () => {
     if (!isAuthenticated || !user) {
@@ -98,19 +106,55 @@ export function ReviewsSection({ providerId, onAggregate }: Props) {
       {/* Sarlavha + xulosa */}
       <Text variant="title">{t("profile.reviews_title")}</Text>
       <View style={styles.summary}>
-        <Text variant="display" color={Colors.text}>
-          {avg.toFixed(1)}
-        </Text>
-        <View>
-          <Stars value={avg} size={18} />
+        <View style={styles.summaryLeft}>
+          <Text variant="display" color={Colors.text}>
+            {avg.toFixed(1)}
+          </Text>
+          <Stars value={avg} size={16} />
           <Text variant="caption" muted style={styles.basedOn}>
             {t("profile.based_on", { n: count })}
           </Text>
         </View>
+
+        {/* Reyting taqsimoti — bar'ni bosib o'sha bahoga filtr qo'yiladi */}
+        {count > 0 && (
+          <View style={styles.histo}>
+            {distribution.map(({ stars, count: c }) => {
+              const pct = count > 0 ? (c / count) * 100 : 0;
+              const on = filterStar === stars;
+              return (
+                <Pressable
+                  key={stars}
+                  style={[styles.histoRow, on && styles.histoRowActive]}
+                  onPress={() => setFilterStar(on ? null : stars)}
+                  hitSlop={4}
+                >
+                  <Text variant="caption" muted style={styles.histoStar}>
+                    {stars}
+                  </Text>
+                  <Ionicons name="star" size={11} color={Colors.star} />
+                  <View style={styles.histoTrack}>
+                    <View style={[styles.histoFill, { width: `${pct}%` }]} />
+                  </View>
+                  <Text variant="caption" muted style={styles.histoCount}>
+                    {c}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        )}
       </View>
 
-      {/* Sharh yozish */}
-      {isAuthenticated ? (
+      {/* Sharh yozish — faqat shu provayderda yakunlangan broni bor foydalanuvchilar */}
+      {!isAuthenticated ? (
+        <Pressable style={styles.loginHint} onPress={() => router.push("/login")}>
+          <Ionicons name="lock-closed-outline" size={16} color={Colors.textMuted} />
+          <Text variant="caption" muted>
+            {t("profile.rate_locked")}
+          </Text>
+        </Pressable>
+      ) : canReview || existing ? (
         <View style={styles.writeBox}>
           <Text variant="bodyStrong">{t("profile.rate_this")}</Text>
           <View style={styles.starRow}>
@@ -144,11 +188,21 @@ export function ReviewsSection({ providerId, onAggregate }: Props) {
           </View>
         </View>
       ) : (
-        <Pressable style={styles.loginHint} onPress={() => router.push("/login")}>
+        <View style={styles.loginHint}>
           <Ionicons name="lock-closed-outline" size={16} color={Colors.textMuted} />
-          <Text variant="caption" muted>
+          <Text variant="caption" muted style={styles.flex}>
             {t("profile.rate_locked")}
           </Text>
+        </View>
+      )}
+
+      {/* Faol filtr indikatori */}
+      {filterStar !== null && (
+        <Pressable style={styles.filterPill} onPress={() => setFilterStar(null)}>
+          <Text variant="caption" color={Colors.primaryDark}>
+            {t("profile.star_filter", { n: filterStar })}
+          </Text>
+          <Ionicons name="close" size={13} color={Colors.primaryDark} />
         </Pressable>
       )}
 
@@ -165,6 +219,10 @@ export function ReviewsSection({ providerId, onAggregate }: Props) {
       {count === 0 ? (
         <Text variant="body" muted style={styles.empty}>
           {t("profile.no_reviews")}
+        </Text>
+      ) : sorted.length === 0 ? (
+        <Text variant="body" muted style={styles.empty}>
+          {t("profile.no_filter_match")}
         </Text>
       ) : (
         sorted.map((r) => (
@@ -208,6 +266,8 @@ function ReviewItem({
   isOwn: boolean;
   onReport: () => void;
 }) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const name = review.profiles?.full_name ?? "—";
   return (
     <View style={styles.item}>
@@ -239,11 +299,42 @@ function ReviewItem({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   wrap: { gap: spacing.md },
   flex: { flex: 1 },
   summary: { flexDirection: "row", alignItems: "center", gap: spacing.lg },
-  basedOn: { marginTop: 4 },
+  summaryLeft: { alignItems: "center", gap: 4 },
+  basedOn: { marginTop: 2 },
+  histo: { flex: 1, gap: 4 },
+  histoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    borderRadius: radius.sm,
+  },
+  histoRowActive: { backgroundColor: Colors.primarySoft },
+  histoStar: { width: 10, textAlign: "center" },
+  histoTrack: {
+    flex: 1,
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: Colors.border,
+    overflow: "hidden",
+  },
+  histoFill: { height: "100%", borderRadius: 4, backgroundColor: Colors.star },
+  histoCount: { width: 18, textAlign: "right" },
+  filterPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    gap: 6,
+    backgroundColor: Colors.primarySoft,
+    borderRadius: radius.pill,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
   writeBox: {
     gap: spacing.sm,
     backgroundColor: Colors.card,

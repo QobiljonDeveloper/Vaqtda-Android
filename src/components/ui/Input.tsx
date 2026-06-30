@@ -8,8 +8,9 @@ import {
   View,
 } from "react-native";
 
-import { Colors } from "@/constants/colors";
-import { fontSize, fontWeight, radius, spacing } from "@/constants/theme";
+import { Colors, type ColorPalette } from "@/constants/colors";
+import { fontFamily, fontSize, fontWeight, radius, spacing } from "@/constants/theme";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 import { Text } from "@/components/ui/Text";
 
 interface InputProps extends TextInputProps {
@@ -29,6 +30,8 @@ export function Input({
   multiline,
   ...rest
 }: InputProps) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [focused, setFocused] = useState(false);
   const [hidden, setHidden] = useState(password);
 
@@ -88,7 +91,7 @@ export function Input({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   wrap: { gap: 6 },
   label: { marginLeft: 2 },
   field: {
@@ -98,18 +101,19 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.card,
     borderWidth: 1.5,
     borderColor: Colors.border,
-    borderRadius: radius.md,
+    borderRadius: radius.pill,
     paddingHorizontal: spacing.lg,
     minHeight: 52,
   },
-  multiline: { alignItems: "flex-start", paddingVertical: spacing.md },
-  focused: { borderColor: Colors.primary, backgroundColor: Colors.white },
+  multiline: { alignItems: "flex-start", paddingVertical: spacing.md, borderRadius: radius.xl },
+  focused: { borderColor: Colors.primary, backgroundColor: Colors.cardElevated },
   errored: { borderColor: Colors.danger },
   input: {
     flex: 1,
     fontSize: fontSize.md,
     color: Colors.text,
     fontWeight: fontWeight.medium,
+    fontFamily: fontFamily.medium,
     paddingVertical: spacing.md,
     outlineStyle: "none",
   } as any,

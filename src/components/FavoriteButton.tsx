@@ -8,8 +8,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet } from "react-native";
 
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { useAuth } from "@/context/AuthContext";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 import { useFavorites } from "@/context/FavoritesContext";
 
 export function FavoriteButton({
@@ -19,6 +20,8 @@ export function FavoriteButton({
   providerId: string;
   size?: number;
 }) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const { isFavorite, toggle } = useFavorites();
@@ -49,6 +52,6 @@ export function FavoriteButton({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   btn: { padding: 4 },
 });

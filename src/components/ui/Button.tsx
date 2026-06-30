@@ -9,8 +9,9 @@ import {
   type ViewStyle,
 } from "react-native";
 
-import { Colors } from "@/constants/colors";
-import { fontSize, fontWeight, radius } from "@/constants/theme";
+import { type ColorPalette } from "@/constants/colors";
+import { fontFamily, fontSize, fontWeight, radius } from "@/constants/theme";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 
 type Variant = "primary" | "secondary" | "outline" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
@@ -45,8 +46,10 @@ export function Button({
   haptic = true,
   style,
 }: ButtonProps) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const isDisabled = disabled || loading;
-  const palette = getPalette(variant);
+  const palette = getPalette(variant, Colors);
 
   const handlePress = () => {
     if (isDisabled) return;
@@ -89,7 +92,7 @@ export function Button({
   );
 }
 
-function getPalette(variant: Variant): { bg: string; fg: string; border?: string } {
+function getPalette(variant: Variant, Colors: ColorPalette): { bg: string; fg: string; border?: string } {
   switch (variant) {
     case "secondary":
       return { bg: Colors.primarySoft, fg: Colors.primaryDarker };
@@ -105,16 +108,16 @@ function getPalette(variant: Variant): { bg: string; fg: string; border?: string
   }
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   base: {
-    borderRadius: radius.lg,
+    borderRadius: radius.pill,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 18,
   },
   fullWidth: { alignSelf: "stretch" },
   content: { flexDirection: "row", alignItems: "center", gap: 8 },
-  label: { fontWeight: fontWeight.bold },
+  label: { fontWeight: fontWeight.bold, fontFamily: fontFamily.bold },
   pressed: { opacity: 0.85, transform: [{ scale: 0.985 }] },
   disabled: { opacity: 0.5 },
 });

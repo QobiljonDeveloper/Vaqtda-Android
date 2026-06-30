@@ -4,8 +4,9 @@ import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 import { Sheet } from "@/components/ui/Sheet";
 import { Text } from "@/components/ui/Text";
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { radius, spacing } from "@/constants/theme";
+import { useThemedStyles } from "@/context/ThemeContext";
 import { supabase } from "@/lib/supabase";
 
 interface BusinessImage {
@@ -15,6 +16,7 @@ interface BusinessImage {
 }
 
 export function Gallery({ providerId, title }: { providerId: string; title: string }) {
+  const styles = useThemedStyles(makeStyles);
   const [images, setImages] = useState<BusinessImage[]>([]);
   const [active, setActive] = useState<string | null>(null);
 
@@ -59,11 +61,11 @@ export function Gallery({ providerId, title }: { providerId: string; title: stri
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   section: { marginTop: spacing.xl, paddingLeft: spacing.lg },
   title: { marginBottom: spacing.md, paddingRight: spacing.lg },
-  row: { gap: spacing.sm, paddingRight: spacing.lg },
-  thumb: { width: 150, height: 110, borderRadius: radius.md, backgroundColor: Colors.skeleton },
+  row: { gap: spacing.md, paddingRight: spacing.lg },
+  thumb: { width: 220, height: 150, borderRadius: radius.lg, backgroundColor: Colors.skeleton },
   viewer: { alignItems: "center", justifyContent: "center" },
-  full: { width: "100%", height: 360, borderRadius: radius.md },
+  full: { width: "100%", height: 360, borderRadius: radius.lg },
 });

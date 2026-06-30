@@ -3,15 +3,17 @@ import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Avatar, Button, IconButton, Input, Text } from "@/components/ui";
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { radius, spacing } from "@/constants/theme";
 import { useAuth } from "@/context/AuthContext";
+import { useThemedStyles } from "@/context/ThemeContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { pickImage, uploadImage } from "@/lib/upload";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "expo-router";
 
 export default function SettingsScreen() {
+  const styles = useThemedStyles(makeStyles);
   const { t } = useLanguage();
   const { user, refreshProfile } = useAuth();
   const router = useRouter();
@@ -153,7 +155,7 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   header: {
     flexDirection: "row",

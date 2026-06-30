@@ -4,8 +4,9 @@ import { Pressable, StyleSheet, View } from "react-native";
 
 import { Sheet } from "@/components/ui/Sheet";
 import { Text } from "@/components/ui/Text";
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { radius, spacing } from "@/constants/theme";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 
 export interface SelectOption {
   id: string;
@@ -31,6 +32,8 @@ export function SelectField({
   sheetTitle,
   icon,
 }: SelectFieldProps) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [open, setOpen] = useState(false);
   const selected = options.find((o) => o.id === value);
 
@@ -75,7 +78,7 @@ export function SelectField({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   wrap: { gap: 6 },
   flex: { flex: 1 },
   label: { marginLeft: 2 },

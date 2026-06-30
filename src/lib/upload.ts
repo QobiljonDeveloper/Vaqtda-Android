@@ -24,6 +24,26 @@ export async function pickImage(opts: PickOptions = {}): Promise<ImagePicker.Ima
   return res.assets[0];
 }
 
+/**
+ * Galereyadan KO'P rasm tanlaydi (web ImageUploader bilan parity).
+ * Ruxsat berilmasa yoki bekor qilinsa bo'sh massiv.
+ */
+export async function pickImages(opts: { quality?: number; selectionLimit?: number } = {}): Promise<
+  ImagePicker.ImagePickerAsset[]
+> {
+  const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  if (!perm.granted) return [];
+
+  const res = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ["images"],
+    allowsMultipleSelection: true,
+    selectionLimit: opts.selectionLimit ?? 10,
+    quality: opts.quality ?? 0.7,
+  });
+  if (res.canceled || !res.assets?.length) return [];
+  return res.assets;
+}
+
 function extFromAsset(asset: ImagePicker.ImagePickerAsset): string {
   const fromName = asset.fileName?.split(".").pop();
   if (fromName) return fromName.toLowerCase();

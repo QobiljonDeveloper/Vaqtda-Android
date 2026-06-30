@@ -5,8 +5,9 @@ import { Platform, Pressable, StyleSheet } from "react-native";
 import { Button } from "@/components/ui/Button";
 import { Sheet } from "@/components/ui/Sheet";
 import { Text } from "@/components/ui/Text";
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { radius, spacing } from "@/constants/theme";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 
 function toDate(hhmm: string): Date {
   const [h, m] = (hhmm || "09:00").split(":").map(Number);
@@ -20,6 +21,8 @@ function toHHMM(d: Date): string {
 }
 
 export function TimeField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const [show, setShow] = useState(false);
   const [temp, setTemp] = useState(() => toDate(value));
 
@@ -70,7 +73,7 @@ export function TimeField({ value, onChange }: { value: string; onChange: (v: st
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   field: {
     backgroundColor: Colors.primarySoft,
     borderRadius: radius.md,

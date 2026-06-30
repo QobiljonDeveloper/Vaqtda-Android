@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 
 interface StarsProps {
   value: number;
@@ -12,6 +13,8 @@ interface StarsProps {
 }
 
 export function Stars({ value, onChange, size = 20, max = 5 }: StarsProps) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const readOnly = !onChange;
 
   return (
@@ -42,7 +45,7 @@ export function Stars({ value, onChange, size = 20, max = 5 }: StarsProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   row: { flexDirection: "row", gap: 4 },
   touchRow: { flex: 1, flexDirection: "row" },
   half: { flex: 1 },

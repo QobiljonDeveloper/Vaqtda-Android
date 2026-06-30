@@ -5,15 +5,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ProviderCard } from "@/components/ProviderCard";
 import { EmptyState, SkeletonCard, Text } from "@/components/ui";
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { spacing } from "@/constants/theme";
 import { useAuth } from "@/context/AuthContext";
 import { useFavorites } from "@/context/FavoritesContext";
+import { useThemedStyles } from "@/context/ThemeContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { supabase } from "@/lib/supabase";
 import type { ProviderRow } from "@/hooks/useProviders";
 
 export default function FavoritesScreen() {
+  const styles = useThemedStyles(makeStyles);
   const { t } = useLanguage();
   const { isAuthenticated } = useAuth();
   const { favoriteIds } = useFavorites();
@@ -93,7 +95,7 @@ export default function FavoritesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   title: { paddingHorizontal: spacing.lg, paddingTop: spacing.xs, paddingBottom: spacing.sm },
   center: { flex: 1, justifyContent: "center" },

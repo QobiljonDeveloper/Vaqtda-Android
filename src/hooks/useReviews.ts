@@ -18,9 +18,38 @@ export interface Review {
 
 export type ReviewSort = "newest" | "highest" | "lowest";
 
-export function useReviews(providerId: string | undefined) {
+export function useReviews(providerId: string | undefined, userId?: string) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  // Foydalanuvchining shu provayderda yakunlangan broni bormi (sharh yozish sharti).
+  // Web ProviderProfileUI bilan bir xil: bookings status='completed'.
+  const [canReview, setCanReview] = useState(false);
+
+  // Web kabi: sahifa ochilishida o'tib ketgan bronlarni 'completed' qilamiz,
+  // so'ng shu foydalanuvchining yakunlangan broni borligini tekshiramiz.
+  const checkCanReview = useCallback(async () => {
+    if (!providerId || !userId) {
+      setCanReview(false);
+      return;
+    }
+    try {
+      await supabase.rpc("complete_past_bookings");
+    } catch {
+      /* RPC bo'lmasa ham davom etamiz */
+    }
+    const { data } = await supabase
+      .from("bookings")
+      .select("id")
+      .eq("client_id", userId)
+      .eq("provider_id", providerId)
+      .eq("status", "completed")
+      .limit(1);
+    setCanReview(!!data && data.length > 0);
+  }, [providerId, userId]);
+
+  useEffect(() => {
+    checkCanReview();
+  }, [checkCanReview]);
 
   const fetch = useCallback(async () => {
     if (!providerId) return;
@@ -83,5 +112,26 @@ export function useReviews(providerId: string | undefined) {
     return { avg: Math.round((sum / c) * 10) / 10, count: c };
   }, [reviews]);
 
-  return { reviews, loading, avg, count, submit, remove, report, refetch: fetch };
+  // Reyting taqsimoti (5..1) — web ProviderProfileUI.distribution bilan bir xil.
+  const distribution = useMemo(
+    () =>
+      [5, 4, 3, 2, 1].map((stars) => ({
+        stars,
+        count: reviews.filter((r) => Math.round(r.rating) === stars).length,
+      })),
+    [reviews]
+  );
+
+  return {
+    reviews,
+    loading,
+    avg,
+    count,
+    distribution,
+    canReview,
+    submit,
+    remove,
+    report,
+    refetch: fetch,
+  };
 }

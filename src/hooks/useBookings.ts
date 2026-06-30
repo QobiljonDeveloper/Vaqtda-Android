@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthContext";
@@ -7,6 +7,7 @@ export interface BookingProvider {
   business_name: any;
   avatar_url: string | null;
   slug: string;
+  category: any;
 }
 
 export interface Booking {
@@ -18,9 +19,18 @@ export interface Booking {
   duration_minutes: number | null;
   status: string;
   notes: string | null;
-  price: number | null;
   provider: BookingProvider | null;
 }
+
+export interface BookingMetrics {
+  total: number;
+  upcoming: number;
+  completed: number;
+  cancelled: number;
+}
+
+/** Web bilan bir xil: bu statuslar "bo'lajak" deb hisoblanadi. */
+const UPCOMING_STATUSES = new Set(["upcoming", "pending", "confirmed"]);
 
 export function useBookings() {
   const { user, isAuthenticated } = useAuth();
@@ -39,7 +49,7 @@ export function useBookings() {
     const { data, error } = await supabase
       .from("bookings")
       .select(
-        "id, provider_id, booking_date, start_time, end_time, duration_minutes, status, notes, price, provider:providers(business_name, avatar_url, slug)"
+        "id, provider_id, booking_date, start_time, end_time, duration_minutes, status, notes, provider:providers(business_name, avatar_url, slug, categories(name))"
       )
       .eq("client_id", user.id)
       .order("booking_date", { ascending: false })
@@ -48,10 +58,18 @@ export function useBookings() {
     if (error) {
       setError(error.message);
     } else {
-      const normalized = (data ?? []).map((b: any) => ({
-        ...b,
-        provider: Array.isArray(b.provider) ? b.provider[0] ?? null : b.provider ?? null,
-      })) as Booking[];
+      const normalized = (data ?? []).map((b: any) => {
+        const p = Array.isArray(b.provider) ? b.provider[0] ?? null : b.provider ?? null;
+        const cat = p
+          ? (Array.isArray(p.categories) ? p.categories[0]?.name : p.categories?.name) ?? null
+          : null;
+        return {
+          ...b,
+          provider: p
+            ? { business_name: p.business_name, avatar_url: p.avatar_url, slug: p.slug, category: cat }
+            : null,
+        };
+      }) as Booking[];
       setBookings(normalized);
     }
     setLoading(false);
@@ -68,5 +86,15 @@ export function useBookings() {
     return { error: error?.message };
   }, [fetch]);
 
-  return { bookings, loading, error, cancel, refetch: fetch };
+  // Web'dagi metrics bilan bir xil: jami / bo'lajak / yakunlangan / bekor qilingan.
+  const metrics = useMemo<BookingMetrics>(() => {
+    return {
+      total: bookings.length,
+      upcoming: bookings.filter((b) => UPCOMING_STATUSES.has(b.status)).length,
+      completed: bookings.filter((b) => b.status === "completed").length,
+      cancelled: bookings.filter((b) => b.status === "cancelled").length,
+    };
+  }, [bookings]);
+
+  return { bookings, metrics, loading, error, cancel, refetch: fetch };
 }

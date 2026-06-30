@@ -12,7 +12,11 @@ import {
 } from "react";
 
 import { localize } from "@/lib/localize";
-import { presentLocal, registerForPush } from "@/lib/push";
+import {
+  addNotificationResponseListener,
+  presentLocal,
+  registerForPush,
+} from "@/lib/push";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthContext";
 
@@ -80,7 +84,11 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
         (payload) => {
           const n = payload.new as AppNotification;
           setNotifications((prev) => [n, ...prev.filter((p) => p.id !== n.id)]);
-          presentLocal(localize(n.title) || "Vaqtda", localize(n.body), n.data ?? {});
+          // data'ga type'ni ham qo'shamiz — banner bosilganda deep-link to'g'ri ishlashi uchun.
+          presentLocal(localize(n.title) || "Vaqtda", localize(n.body), {
+            ...(n.data ?? {}),
+            type: n.type,
+          });
         }
       )
       .subscribe();
@@ -93,6 +101,13 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
   useEffect(() => {
     if (isAuthenticated) registerForPush().catch(() => {});
   }, [isAuthenticated]);
+
+  // OS push/local bildirishnoma bosilganda deep-link bilan tegishli ekranga o'tamiz
+  // (background/quit holatdan ham). Web NotificationsBell handleClick bilan bir xil.
+  useEffect(() => {
+    const unsub = addNotificationResponseListener();
+    return unsub;
+  }, []);
 
   const markRead = useCallback(async (id: string) => {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));

@@ -1,31 +1,104 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Linking, Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Alert, Linking, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button, IconButton, Input, Text } from "@/components/ui";
-import { Colors } from "@/constants/colors";
+import { type ColorPalette } from "@/constants/colors";
 import { radius, shadow, spacing } from "@/constants/theme";
 import { useLanguage } from "@/context/LanguageContext";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 
 const EMAIL = "support@vaqtda.uz";
 const PHONE = "+998712000000";
 const TELEGRAM = "https://t.me/vaqtda";
 const MAP = "https://yandex.com/maps/10335/tashkent/";
 
+// Web /api/contact bilan bir xil Telegram yetkazib berish (server'siz, to'g'ridan-to'g'ri).
+const TG_TOKEN = process.env.EXPO_PUBLIC_TELEGRAM_BOT_TOKEN;
+const TG_CHAT = process.env.EXPO_PUBLIC_TELEGRAM_CHAT_ID;
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 type IconName = keyof typeof Ionicons.glyphMap;
 
 export default function ContactScreen() {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const { t } = useLanguage();
   const router = useRouter();
+
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  const [sending, setSending] = useState(false);
 
   const open = (url: string) => Linking.openURL(url).catch(() => {});
 
-  const sendMessage = () => {
-    const body = encodeURIComponent(message.trim());
-    open(`mailto:${EMAIL}?subject=Vaqtda&body=${body}`);
+  // Web ContactForm validatsiyasi bilan bir xil shartlar.
+  const sendMessage = async () => {
+    if (fullName.trim().length < 3) {
+      Alert.alert(t("contact.err_name"));
+      return;
+    }
+    if (phone.trim().length > 0 && phone.trim().length < 7) {
+      Alert.alert(t("contact.err_phone"));
+      return;
+    }
+    if (message.trim().length < 10) {
+      Alert.alert(t("contact.err_message"));
+      return;
+    }
+
+    setSending(true);
+    try {
+      // Web /api/contact bilan bir xil: nom/telefon/xabar -> Telegram guruhi.
+      // Server yo'q — to'g'ridan-to'g'ri Telegram Bot API chaqiriladi.
+      if (!TG_TOKEN || !TG_CHAT) throw new Error("no_telegram_config");
+
+      const text = [
+        "📬 <b>Yangi Aloqa So'rovi! (Mobil)</b>",
+        "",
+        `👤 <b>Ism:</b> ${escapeHtml(fullName.trim())}`,
+        `📞 <b>Telefon:</b> <code>${escapeHtml(phone.trim() || "—")}</code>`,
+        "✉️ <b>Xabar:</b>",
+        `<i>${escapeHtml(message.trim())}</i>`,
+      ].join("\n");
+
+      const res = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: TG_CHAT, text, parse_mode: "HTML" }),
+      });
+
+      if (!res.ok) throw new Error("telegram_failed");
+
+      Alert.alert(t("contact.sent"));
+      setFullName("");
+      setPhone("");
+      setMessage("");
+    } catch {
+      // Edge Function deploy qilinmagan/ishlamasa — chiroyli fallback:
+      // foydalanuvchiga email orqali yuborishni taklif qilamiz.
+      Alert.alert(t("contact.err_send"), t("contact.fallback_email"), [
+        { text: t("common.cancel"), style: "cancel" },
+        {
+          text: t("contact.email_us"),
+          onPress: () => {
+            const subject = encodeURIComponent("Vaqtda");
+            const body = encodeURIComponent(
+              `${fullName.trim()}\n${phone.trim()}\n\n${message.trim()}`
+            );
+            open(`mailto:${EMAIL}?subject=${subject}&body=${body}`);
+          },
+        },
+      ]);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -55,13 +128,41 @@ export default function ContactScreen() {
         <Text variant="title" style={styles.formTitle}>
           {t("contact.message")}
         </Text>
+
+        <Input
+          label={t("auth.full_name")}
+          placeholder={t("auth.full_name")}
+          value={fullName}
+          onChangeText={setFullName}
+          icon="person-outline"
+          editable={!sending}
+        />
+        <Input
+          label={t("auth.phone")}
+          placeholder="+998 90 000 00 00"
+          value={phone}
+          onChangeText={setPhone}
+          icon="call-outline"
+          keyboardType="phone-pad"
+          editable={!sending}
+        />
         <Input
           placeholder={t("contact.message_placeholder")}
           value={message}
           onChangeText={setMessage}
           multiline
+          editable={!sending}
         />
-        <Button label={t("contact.send")} icon="send-outline" onPress={sendMessage} />
+        <Button
+          label={sending ? t("contact.sending") : t("contact.send")}
+          icon="send-outline"
+          loading={sending}
+          onPress={sendMessage}
+        />
+
+        <Text variant="caption" muted style={styles.privacy}>
+          {t("contact.privacy_agree")}
+        </Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -78,6 +179,8 @@ function ActionCard({
   value: string;
   onPress: () => void;
 }) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <Pressable style={({ pressed }) => [styles.card, pressed && styles.pressed]} onPress={onPress}>
       <View style={styles.cardIcon}>
@@ -94,7 +197,7 @@ function ActionCard({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   flex: { flex: 1 },
   header: {
@@ -127,4 +230,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   formTitle: { marginTop: spacing.lg },
+  privacy: { marginTop: spacing.xs, textAlign: "center" },
 });

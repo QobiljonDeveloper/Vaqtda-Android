@@ -1,9 +1,10 @@
 import { Image } from "expo-image";
 import { StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { fontWeight } from "@/constants/theme";
 import { Text } from "@/components/ui/Text";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 
 interface AvatarProps {
   uri?: string | null;
@@ -21,6 +22,8 @@ function initials(name?: string): string {
 }
 
 export function Avatar({ uri, name, size = 48, ring = false, rounded = true }: AvatarProps) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const br = rounded ? size / 2 : size * 0.28;
   const wrap = ring
     ? { padding: 2, borderRadius: br + 2, borderWidth: 2, borderColor: Colors.primary }
@@ -57,7 +60,7 @@ export function Avatar({ uri, name, size = 48, ring = false, rounded = true }: A
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   fallback: {
     alignItems: "center",
     justifyContent: "center",

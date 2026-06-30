@@ -196,6 +196,11 @@ export const uz = {
   "booking.conflict": "Bu vaqt band qilingan",
   "booking.conflict_desc": "Bu vaqt allaqachon boshqa foydalanuvchi tomonidan band qilingan. Iltimos, boshqa vaqt tanlang.",
   "booking.ok": "Tushunarli",
+  "booking.next_in": "Keyingi",
+  "booking.cancel_window_note": "Boshlanishiga 24 soatdan kam qolganda bekor qilib bo'lmaydi",
+  "booking.past_time_desc": "Bu vaqt allaqachon o'tib ketdi. Iltimos, boshqa vaqt tanlang.",
+  "booking.just_taken_desc": "Afsus, bu vaqt hozirgina band qilindi. Boshqa vaqt tanlang.",
+  "booking.duration_too_long": "Tanlangan davomiylik ish vaqtiga sig'maydi",
   "booking.stay": "Qolish",
   "booking.my_bookings": "Bronlarim",
   "common.saving": "Saqlanmoqda...",
@@ -459,6 +464,8 @@ export const uz = {
   "search.location_denied": "Joylashuvga ruxsat berilmadi",
   "search.distance_km": "{km} km uzoqlikda",
   "search.distance_m": "{m} m uzoqlikda",
+  "search.ai_searching": "Aqlli qidiruv...",
+  "search.ai_corrected": "«{corrected}» bo'yicha natijalar (so'rovingiz: «{raw}»)",
 
   // ── Ulashish ──
   "share.message": "{name} — Vaqtda.uz'da bron qiling",
@@ -520,6 +527,56 @@ export const uz = {
   "home.all_providers": "Barcha provayderlar",
   "home.results": "{n} ta natija",
   "home.greeting": "Xush kelibsiz 👋",
+
+  // ── Biznes profili (add-business) — Wave 2 ──
+  "ab.images": "Biznes rasmlari",
+  "ab.images_hint": "Kamida 1 ta rasm yuklang. Bittasini asosiy qilib belgilang.",
+  "ab.need_image": "Iltimos, kamida bitta rasm yuklang.",
+  "ab.add_images": "Rasm qo'shish",
+  "ab.set_primary": "Asosiy qilish",
+  "ab.set_location": "Joylashuvni belgilash",
+  "ab.change_location": "Joylashuvni o'zgartirish",
+  "ab.use_current": "Joriy joylashuvdan foydalanish",
+  "ab.tap_to_set": "Joylashuvni belgilash uchun xaritani bosing",
+  "ab.latitude": "Kenglik (lat)",
+  "ab.longitude": "Uzunlik (lng)",
+
+  // ── Auth (Wave 2) ──
+  "auth.email_not_verified": "Email tasdiqlanmagan. Pochtangizdagi havolani bosing.",
+  "auth.invalid_credentials": "Email yoki parol noto'g'ri",
+  "auth.registered_success": "Ro'yxatdan o'tdingiz! Emailingizni tasdiqlang, so'ng kiring.",
+  "auth.optional": "ixtiyoriy",
+  "auth.terms": "Foydalanish shartlari",
+  "auth.privacy": "Maxfiylik siyosati",
+
+  // ── To'lovlar (Wave 2) ──
+  "pay.demo_card": "Demo karta",
+  "pay.coming_soon": "Tez orada qo'shiladi",
+  "pay.demo_note": "Bu — namuna ko'rinish. To'lov integratsiyasi tez orada.",
+
+  // ── Provayder dashboard (Wave 2) ──
+  "pdash.today_count": "Bugun",
+  "pdash.upcoming_count": "Bo'lajak",
+  "pdash.day_schedule": "Kunlik jadval",
+  "pdash.free_day": "Bo'sh kun",
+  "pdash.free_day_desc": "Bu kunda band qilingan uchrashuvlar yo'q",
+
+  // ── Kontakt (Wave 2) ──
+  "contact.fallback_email": "Yuborib bo'lmadi. Email orqali bog'lanasizmi?",
+
+  // ── Stitch ekran moslashuvi ──
+  "auth.brand_name": "Vaqtda",
+  "auth.login_welcome": "Xush kelibsiz! Davom etish uchun kiring",
+  "auth.email_label": "Elektron pochta",
+  "auth.password_label": "Parol",
+  "auth.role_question": "Kim sifatida ro'yxatdan o'tasiz?",
+  "tt.header_caption": "Aniq sanalarni belgilang — mijozlar faqat siz tanlagan kunlarni ko'radi.",
+  "tt.stat_marked": "Belgilangan kunlar",
+  "tt.unit_days": "kun",
+  "tt.tab_settings": "Sozlamalar",
+  "tt.active": "Faol",
+  "pdash.free_slot": "Bo'sh",
+  "pdash.unit_bookings": "bron",
 } as const;
 
 export type TKey = keyof typeof uz;

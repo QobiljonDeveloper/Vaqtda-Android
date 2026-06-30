@@ -4,15 +4,17 @@ import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Avatar, Badge, Button, Divider, EmptyState, Text } from "@/components/ui";
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { radius, shadow, spacing } from "@/constants/theme";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { useThemeMode, type ThemeMode } from "@/context/ThemeContext";
+import { useColors, useThemedStyles, useThemeMode, type ThemeMode } from "@/context/ThemeContext";
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
 export default function ProfileScreen() {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const { t, lang, setLang } = useLanguage();
   const { user, isAuthenticated, logout } = useAuth();
   const router = useRouter();
@@ -69,6 +71,10 @@ export default function ProfileScreen() {
         <View style={styles.menu}>
           <MenuRow icon="calendar-outline" label={t("menu.my_bookings")} onPress={() => router.push("/bookings")} />
           <Divider />
+          <MenuRow icon="time-outline" label={t("hist.title")} onPress={() => router.push("/history")} />
+          <Divider />
+          <MenuRow icon="card-outline" label={t("pay.title")} onPress={() => router.push("/payments")} />
+          <Divider />
           <MenuRow icon="heart-outline" label={t("menu.favorites")} onPress={() => router.push("/favorites")} />
           <Divider />
           <MenuRow icon="notifications-outline" label={t("menu.notifications")} onPress={() => router.push("/notifications")} />
@@ -115,6 +121,8 @@ export default function ProfileScreen() {
 }
 
 function MenuRow({ icon, label, onPress }: { icon: IconName; label: string; onPress: () => void }) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <Pressable style={({ pressed }) => [styles.row, pressed && styles.rowPressed]} onPress={onPress}>
       <View style={styles.rowIcon}>
@@ -137,6 +145,8 @@ function LangSwitch({
   setLang: (l: "uz" | "ru") => void;
   t: (k: any) => string;
 }) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.langWrap}>
       <Text variant="label" muted style={styles.sectionLabel}>
@@ -163,6 +173,8 @@ function LangSwitch({
 }
 
 function ThemeSwitch() {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const { mode, setMode } = useThemeMode();
   const modes: { id: ThemeMode; label: string }[] = [
     { id: "light", label: "Светлая" },
@@ -195,7 +207,7 @@ function ThemeSwitch() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   safe: { flex: 1, backgroundColor: Colors.background },
   flex: { flex: 1 },
   center: { flex: 1, justifyContent: "center" },

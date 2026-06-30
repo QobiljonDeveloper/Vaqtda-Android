@@ -2,7 +2,7 @@
   "expo": {
     "name": "Vaqtda",
     "slug": "booking-mobile",
-    "version": "1.0.0",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "vaqtda",
@@ -75,9 +75,63 @@
       [
         "expo-build-properties",
         {
-          "android": {}
+          "android": {
+            "minSdkVersion": 26
+          }
         }
       ],
+      [
+        "react-native-android-widget",
+        {
+          "widgets": [
+            {
+              "name": "Search",
+              "label": "Vaqtda — Qidirish",
+              "minWidth": "250dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 1,
+              "description": "Tezkor AI qidiruv",
+              "previewImage": "./assets/images/icon.png",
+              "resizeMode": "horizontal|vertical"
+            },
+            {
+              "name": "Upcoming",
+              "label": "Vaqtda — Keyingi bron",
+              "minWidth": "250dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 2,
+              "description": "Keyingi broningiz",
+              "previewImage": "./assets/images/icon.png",
+              "resizeMode": "horizontal|vertical"
+            },
+            {
+              "name": "Schedule",
+              "label": "Vaqtda — Bugungi jadval",
+              "minWidth": "250dp",
+              "minHeight": "250dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 4,
+              "description": "Provayder bugungi jadvali",
+              "previewImage": "./assets/images/icon.png",
+              "resizeMode": "horizontal|vertical"
+            },
+            {
+              "name": "Stats",
+              "label": "Vaqtda — Statistika",
+              "minWidth": "250dp",
+              "minHeight": "110dp",
+              "targetCellWidth": 4,
+              "targetCellHeight": 2,
+              "description": "Provayder statistikasi",
+              "previewImage": "./assets/images/icon.png",
+              "resizeMode": "horizontal|vertical"
+            }
+          ]
+        }
+      ],
+      "expo-quick-actions",
       "./withLocationDowngrade.js"
     ],
     "experiments": {

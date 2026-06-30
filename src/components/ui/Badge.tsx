@@ -1,8 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from "react-native";
 
-import { Colors } from "@/constants/colors";
-import { fontSize, fontWeight, radius } from "@/constants/theme";
+import { type ColorPalette } from "@/constants/colors";
+import { fontFamily, fontSize, fontWeight, radius } from "@/constants/theme";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 
 export type BadgeTone = "primary" | "success" | "warning" | "danger" | "info" | "neutral";
 
@@ -12,17 +13,19 @@ interface BadgeProps {
   icon?: keyof typeof Ionicons.glyphMap;
 }
 
-const TONE: Record<BadgeTone, { bg: string; fg: string }> = {
+const toneMap = (Colors: ColorPalette): Record<BadgeTone, { bg: string; fg: string }> => ({
   primary: { bg: Colors.primarySoft, fg: Colors.primaryDarker },
   success: { bg: Colors.successSoft, fg: Colors.success },
   warning: { bg: Colors.warningSoft, fg: Colors.warning },
   danger: { bg: Colors.dangerSoft, fg: Colors.danger },
   info: { bg: Colors.infoSoft, fg: Colors.info },
   neutral: { bg: Colors.backgroundAlt, fg: Colors.textMuted },
-};
+});
 
 export function Badge({ label, tone = "neutral", icon }: BadgeProps) {
-  const c = TONE[tone];
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
+  const c = toneMap(Colors)[tone];
   return (
     <View style={[styles.badge, { backgroundColor: c.bg }]}>
       {icon && <Ionicons name={icon} size={12} color={c.fg} />}
@@ -31,7 +34,7 @@ export function Badge({ label, tone = "neutral", icon }: BadgeProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   badge: {
     flexDirection: "row",
     alignItems: "center",
@@ -41,5 +44,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
-  text: { fontSize: fontSize.xs, fontWeight: fontWeight.bold, letterSpacing: 0.2 },
+  text: { fontSize: fontSize.xs, fontWeight: fontWeight.bold, fontFamily: fontFamily.bold, letterSpacing: 0.2 },
 });

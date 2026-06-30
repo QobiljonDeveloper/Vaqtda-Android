@@ -1,7 +1,7 @@
-import { Text as RNText, type TextProps, type TextStyle } from "react-native";
+import { Text as RNText, StyleSheet, type TextProps, type TextStyle } from "react-native";
 
-import { Colors } from "@/constants/colors";
-import { fontSize, fontWeight } from "@/constants/theme";
+import { fontFor, fontSize, fontWeight } from "@/constants/theme";
+import { useColors } from "@/context/ThemeContext";
 
 export type TextVariant =
   | "display"
@@ -42,6 +42,11 @@ export function Text({
   style,
   ...rest
 }: AppTextProps) {
+  const Colors = useColors();
+  // style'da fontWeight bo'lsa — variant emas, o'sha og'irlik oilasini ishlatamiz,
+  // shunda matn to'g'ri qalinlikda Plus Jakarta Sans bilan chiqadi.
+  const flat = StyleSheet.flatten(style) as TextStyle | undefined;
+  const weight = flat?.fontWeight ?? VARIANT[variant].fontWeight;
   return (
     <RNText
       style={[
@@ -49,6 +54,7 @@ export function Text({
         { color: color ?? (muted ? Colors.textMuted : Colors.text) },
         center && { textAlign: "center" },
         style,
+        { fontFamily: fontFor(weight) },
       ]}
       {...rest}
     />

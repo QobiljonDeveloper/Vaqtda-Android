@@ -5,8 +5,9 @@ import { Pressable, StyleSheet, View } from "react-native";
 
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { Text } from "@/components/ui/Text";
-import { Colors } from "@/constants/colors";
+import { Colors, type ColorPalette } from "@/constants/colors";
 import { fontWeight, radius, shadow, spacing } from "@/constants/theme";
+import { useColors, useThemedStyles } from "@/context/ThemeContext";
 import { localize } from "@/lib/localize";
 import type { ProviderRow } from "@/hooks/useProviders";
 
@@ -18,6 +19,8 @@ interface ProviderCardProps {
 }
 
 function ProviderCardBase({ provider, onPress, variant = "row", distanceLabel }: ProviderCardProps) {
+  const Colors = useColors();
+  const styles = useThemedStyles(makeStyles);
   const name = localize(provider.business_name) || provider.slug;
   const category = localize(provider.category_name);
   const region = localize(provider.region_name);
@@ -115,7 +118,7 @@ function ProviderCardBase({ provider, onPress, variant = "row", distanceLabel }:
 
 export const ProviderCard = memo(ProviderCardBase);
 
-const styles = StyleSheet.create({
+const makeStyles = (Colors: ColorPalette) => StyleSheet.create({
   pressed: { opacity: 0.95, transform: [{ scale: 0.99 }] },
   flex: { flexShrink: 1 },
 

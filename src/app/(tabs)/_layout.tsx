@@ -1,12 +1,18 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { Platform } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Colors } from "@/constants/colors";
 import { useLanguage } from "@/context/LanguageContext";
+import { useColors } from "@/context/ThemeContext";
 
 export default function TabsLayout() {
   const { t } = useLanguage();
+  const Colors = useColors();
+  // Telefonning pastki tizim paneli (gesture/navbar) balandligi. Shu qadar
+  // tab bar'ni ko'taramiz, aks holda yorliqlar pastda kesilib qoladi.
+  const insets = useSafeAreaInsets();
+  const bottomInset = Platform.OS === "android" ? insets.bottom : 0;
 
   return (
     <Tabs
@@ -22,9 +28,9 @@ export default function TabsLayout() {
         tabBarStyle: {
           borderTopColor: Colors.border,
           backgroundColor: Colors.background,
-          height: Platform.OS === "ios" ? 88 : Platform.OS === "web" ? 60 : 64,
+          height: (Platform.OS === "ios" ? 88 : Platform.OS === "web" ? 60 : 64) + bottomInset,
           paddingTop: 4,
-          paddingBottom: Platform.OS === "ios" ? 28 : 0,
+          paddingBottom: Platform.OS === "ios" ? 28 : bottomInset,
         },
       }}
     >
